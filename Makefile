@@ -6,8 +6,8 @@ CPPFLAGS += $(addprefix -I, $(CONAN_INCLUDE_DIRS))
 LDFLAGS += $(addprefix -L, $(CONAN_LIB_DIRS))
 LDLIBS += $(addprefix -l, $(CONAN_LIBS))
 LDLIBS += $(addprefix -l, $(CONAN_SYSTEM_LIBS))
-CFLAGS += $(addprefix CONAN_CFLAGS)
-CXXFLAGS += $(addprefix CONAN_CXXFLAGS)
+CFLAGS += $(CONAN_CFLAGS)
+CXXFLAGS += $(CONAN_CXXFLAGS)
 
 # C++ stuff
 CPPFLAGS += -std=c++17
