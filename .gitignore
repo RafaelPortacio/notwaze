@@ -1,5 +1,5 @@
 # Build stuff:
-build/
+.build/
 waze-server
 
 # Conan stuff:
