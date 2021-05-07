@@ -16,8 +16,8 @@ CFLAGS += -Wall
 # Recipe-related Variables
 OUT := waze-server
 
-SOURCES = $(wildcard src/*.cpp)
-OBJECTS = $(patsubst src/%.cpp, build/%.o, $(SOURCES))
+SOURCES = $(wildcard *.cpp)
+OBJECTS = $(patsubst %.cpp, .build/%.o, $(SOURCES))
 
 
 # Phonies
@@ -31,16 +31,16 @@ serve:
 .PHONY: clean
 clean:
 	rm -f $(OUT)
-	rm -rf build
+	rm -rf .build
 
 # C++ Compilation Targets
 $(OUT): $(OBJECTS)
 	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $^
 
-build/%.o: src/%.cpp | build/
+.build/%.o: %.cpp | .build/
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $^
 
-build/:
+.build/:
 	mkdir -p $@
 
 # Conan automatic dependency installation
