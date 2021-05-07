@@ -1,5 +1,5 @@
 # Conan stuff
-include conanbuildinfo.mak
+include .build/conanbuildinfo.mak
 
 CPPFLAGS += $(addprefix -D, $(CONAN_DEFINES))
 CPPFLAGS += $(addprefix -I, $(CONAN_INCLUDE_DIRS))
@@ -44,5 +44,6 @@ $(OUT): $(OBJECTS)
 	mkdir -p $@
 
 # Conan automatic dependency installation
-conanbuildinfo.mak: conanfile.txt
-	conan install . --build=missing
+.build/conanbuildinfo.mak: conanfile.txt | .build/
+	cp $< .build/
+	cd .build && conan install . --build=missing
