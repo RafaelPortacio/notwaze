@@ -1,2 +1,10 @@
+# Build stuff:
 build/
 waze-server
+
+# Conan stuff:
+conan.lock
+conanbuildinfo.mak
+conanbuildinfo.txt
+conaninfo.txt
+graph_info.json
