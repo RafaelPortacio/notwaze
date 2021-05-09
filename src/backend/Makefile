@@ -17,6 +17,7 @@ CFLAGS += -Wall
 OUT := waze-server
 
 SOURCES = $(wildcard *.cpp)
+HEADERS = $(wildcard *.hpp)
 OBJECTS = $(patsubst %.cpp, .build/%.o, $(SOURCES))
 
 
@@ -37,8 +38,8 @@ clean:
 $(OUT): $(OBJECTS)
 	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $^
 
-.build/%.o: %.cpp | .build/
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $^
+.build/%.o: %.cpp $(HEADERS) | .build/
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 .build/:
 	mkdir -p $@
