@@ -36,7 +36,7 @@ clean:
 
 # C++ Compilation Targets
 $(OUT): $(OBJECTS)
-	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $^
+	$(CXX) $(LDFLAGS) $(LDLIBS) -Wall -o $@ $^
 
 .build/%.o: %.cpp $(HEADERS) | .build/
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
