@@ -5,12 +5,13 @@ import osmnx as ox
 print("Acquiring graph...")
 G = ox.graph_from_place("Rio de Janeiro, RJ, Brasil")
 print("Got the graph!")
+
 # impute speed on all edges missing data
 G = ox.add_edge_speeds(G)
 
 # calculate travel time (seconds) for all edges
 G = ox.add_edge_travel_times(G)
-print("added time and speed info!")
+print("added time info!")
 
 #create node dictionary
 nodes = {}
@@ -24,8 +25,8 @@ for i in G.nodes:
 edges = []
 for i in G.edges:
     dict_aux = G.edges[i]
-    origin_node = i[0]
-    destination_node = i[1]
+    origin_node = str(i[0])
+    destination_node = str(i[1])
     eta = dict_aux['travel_time']
     edges.append({'origin_node': origin_node,
                   'destination_node': destination_node,
