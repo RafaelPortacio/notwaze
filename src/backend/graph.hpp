@@ -61,4 +61,8 @@ class Graph {
         std::vector<std::pair<id_t, Edge>>::const_iterator cend_outedges(id_t origin_node) const {
             return _edges.at(origin_node).cend();
         }
+
+        const Node& get_node(id_t node_id) const {
+            return _nodes.at(node_id);
+        }
 };
