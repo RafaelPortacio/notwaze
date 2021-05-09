@@ -28,11 +28,9 @@ Graph load_graph_from_json_file(const std::string& path) {
         });
 
     for (const auto& edge_data : document["edges"])
-        graph.add_edge(Graph::Edge {
-            .origin_node = std::stoul(edge_data["origin_node"].get<std::string>()),
-            .destination_node = std::stoul(edge_data["destination_node"].get<std::string>()),
-            .eta = edge_data["eta"].get<double>(),
-        });
+        graph.add_edge(std::stoul(edge_data["origin_node"].get<std::string>()),
+                       std::stoul(edge_data["destination_node"].get<std::string>()),
+                       Graph::Edge { .eta = edge_data["eta"].get<double>() });
 
     return graph;
 }
