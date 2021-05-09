@@ -19,23 +19,32 @@ class Graph {
         };
 
         struct Edge {
-            id_t origin_node;
-            id_t destination_node;
             eta_t eta;
         };
 
     private:
         std::unordered_map<id_t, Node> _nodes;
-        std::vector<Edge> _edges;
+        std::unordered_map<id_t, std::vector<std::pair<id_t, Edge>>> _edges;
 
     public:
         Graph() = default;
 
-        void add_node(const id_t& id, const Node& node) { _nodes.insert({id, node}); }
-        void add_edge(const Edge& edge)                 { _edges.push_back(edge); }
+        void add_node(const id_t& id, const Node& node) {
+            _nodes.insert({id, node});
+        }
+        void add_edge(const id_t& start_point, const id_t& end_point, const Edge& edge) {
+            if (!_edges.count(start_point))
+                _edges.insert({start_point, {}});
+            _edges[start_point].push_back({end_point, edge});
+        }
 
         size_t n_nodes() const { return _nodes.size(); }
-        size_t n_edges() const { return _edges.size(); }
+        size_t n_edges() const {
+            size_t out = 0;
+            for (const auto& [_, es] : _edges)
+                out += es.size();
+            return out;
+        }
 
         decltype(_nodes)::iterator        begin_nodes()       { return _nodes. begin(); }
         decltype(_nodes)::iterator          end_nodes()       { return _nodes.   end(); }
@@ -45,4 +54,11 @@ class Graph {
         decltype(_edges)::iterator          end_edges()       { return _edges.   end(); }
         decltype(_edges)::const_iterator cbegin_edges() const { return _edges.cbegin(); }
         decltype(_edges)::const_iterator   cend_edges() const { return _edges.  cend(); }
+
+        std::vector<std::pair<id_t, Edge>>::const_iterator cbegin_outedges(id_t origin_node) const {
+            return _edges.at(origin_node).cbegin();
+        }
+        std::vector<std::pair<id_t, Edge>>::const_iterator cend_outedges(id_t origin_node) const {
+            return _edges.at(origin_node).cend();
+        }
 };
