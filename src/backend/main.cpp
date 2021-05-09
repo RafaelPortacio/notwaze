@@ -9,8 +9,8 @@
 using namespace std;
 
 
-vector<id_t> shortest_path_dijkstra (const Graph& G, const id_t& s, const id_t& t) {
-    unordered_map<id_t, double> d;
+pair<vector<id_t>, eta_t> shortest_path_dijkstra (const Graph& G, const id_t& s, const id_t& t) {
+    unordered_map<id_t, eta_t> d;
     unordered_map<id_t, id_t> p;
     unordered_set<id_t> F;
 
@@ -25,8 +25,22 @@ vector<id_t> shortest_path_dijkstra (const Graph& G, const id_t& s, const id_t& 
     while (!F.empty()) {
         id_t mv = *min_element(F.cbegin(), F.cend(), [&d](auto l ,auto r){ return d[l] < d[r]; });
         
-        for 
-    } 
+        for (auto iter = G.cbegin_outedges(mv); iter != G.cend_outedges(mv); ++iter) {
+            if (d[iter->first] < d[mv] + iter->second.eta) {
+                d[iter->first] = d[mv] + iter->second.eta;
+                p[iter->first] = mv;
+            }
+        }
+        F.erase(mv);
+    }
+
+    vector<id_t> path {t};
+    id_t current = t;
+    while (current != s) {
+        current = p[current];
+        path.push_back(current);
+    }
+    return {path, d[t]};
 }
 
 int main() {
