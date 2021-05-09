@@ -8,3 +8,6 @@ conanbuildinfo.mak
 conanbuildinfo.txt
 conaninfo.txt
 graph_info.json
+
+# Our generated files
+rj_graph_database.json
