@@ -3,7 +3,7 @@ import osmnx as ox
 
 
 print("Acquiring graph...")
-G = ox.graph_from_place("Rio de Janeiro, RJ, Brasil")
+G = ox.graph_from_place("Rio de Janeiro, RJ, Brasil", network_type='drive')
 print("Got the graph!")
 
 # impute speed on all edges missing data
