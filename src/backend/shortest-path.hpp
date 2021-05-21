@@ -6,4 +6,6 @@
 #include "graph.hpp"
 
 
-std::pair<std::vector<id_t>, eta_t> shortest_path_dijkstra(const Graph& G, const id_t& s, const id_t& t);
+std::vector<id_t> shortest_path_dijkstra(const Graph& graph, 
+                                         const id_t& start_point, 
+                                         const id_t& end_point);
