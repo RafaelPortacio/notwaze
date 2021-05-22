@@ -9,6 +9,7 @@ trim() {
 
 for input_graph in "$INPUTS_DIR"/*.json
 do
+    sed -i 's/ //g' "$input_graph"
     while read -r correct_path
     do
         correct_path=$(echo "$correct_path" | trim)
