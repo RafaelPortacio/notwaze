@@ -22,6 +22,7 @@ vector<id_t> shortest_path_dijkstra (const Graph& graph,
 
     while (!frontier.empty()) {
         pair<id_t, eta_t> current = frontier.top();
+        frontier.pop();
 
         if (current.first == end_point) {
             break;
