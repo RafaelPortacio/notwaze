@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <vector>
 #include <unordered_map>
 
@@ -14,6 +15,21 @@ using eta_t = double; // in minutes
 struct Node {
     double latitude;
     double longitude;
+
+    friend double squared_euclidean_distance(const Node& x, const Node& y) {
+        double latdiff  = x.latitude  - y.latitude;
+        double longdiff = x.longitude - y.longitude;
+        return latdiff*latdiff + longdiff*longdiff;
+    }
+
+    friend double euclidean_distance(const Node& x, const Node& y) {
+        return std::sqrt(squared_euclidean_distance(x, y));
+    }
+
+    friend double manhattan_distance(const Node& x, const Node& y) {
+        return std::max(std::abs(x.latitude - y.latitude),
+                        std::abs(x.longitude - y.longitude));
+    }
 };
 
 struct Edge {
