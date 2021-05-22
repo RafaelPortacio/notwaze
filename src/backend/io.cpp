@@ -32,5 +32,7 @@ Graph load_graph_from_json_file(const std::string& path) {
                        std::stoul(edge_data["destination_node"].get<std::string>()),
                        Edge { .eta = edge_data["eta"].get<double>() });
 
+    graph.done();
+
     return graph;
 }
