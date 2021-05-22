@@ -14,28 +14,27 @@ CPPFLAGS += -std=c++17
 CFLAGS += -Wall
 
 # Recipe-related Variables
-OUT := waze-server
-
-SOURCES = $(wildcard *.cpp)
+MAINS = server.cpp
+SOURCES = $(filter-out $(MAINS), $(wildcard *.cpp))
 HEADERS = $(wildcard *.hpp)
 OBJECTS = $(patsubst %.cpp, .build/%.o, $(SOURCES))
 
 
 # Phonies
 .PHONY: all
-all: $(OUT)
+all: waze-server
 
 .PHONY: serve
 serve:
-	./$(OUT)
+	./waze-server
 
 .PHONY: clean
 clean:
-	rm -f $(OUT)
+	rm -f waze-server
 	rm -rf .build
 
 # C++ Compilation Targets
-$(OUT): $(OBJECTS)
+waze-server: .build/server.o $(OBJECTS)
 	$(CXX) -g $(LDFLAGS) $(LDLIBS) -Wall -o $@ $^
 
 .build/%.o: %.cpp $(HEADERS) | .build/
