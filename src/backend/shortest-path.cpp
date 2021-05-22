@@ -59,6 +59,9 @@ vector<id_t> shortest_path_dijkstra (const Graph& graph,
         path.push_back(current);
     }
 
+        return path;
+}
+
 std::vector<id_t> shortest_path_A_star (const Graph& graph,
                                    const id_t& start_point,
                                    const id_t& end_point) {
@@ -83,7 +86,7 @@ std::vector<id_t> shortest_path_A_star (const Graph& graph,
 
             if (!cost_so_far.count(iter->first) || new_cost < cost_so_far.at(iter->first)) {
                 cost_so_far[iter->first] = new_cost;
-                eta_t priority = new_cost + heuristic(end_point, iter);
+                eta_t priority = new_cost + euclidean_distance(graph[end_point], graph[iter->first]);
                 frontier.push({iter->first, priority});
                 came_from[iter->first] = current.first;
             }
