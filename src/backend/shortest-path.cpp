@@ -13,7 +13,17 @@ using namespace std;
 vector<id_t> shortest_path_dijkstra (const Graph& graph,
                                      const id_t& start_point,
                                      const id_t& end_point) {
-    priority_queue<pair <id_t, eta_t>> frontier;
+
+    class Compare
+    {
+    public:
+        bool operator() (const pair <id_t, eta_t>& l,const pair <id_t, eta_t>& r)
+        {
+            return l.second > r.second;
+        }
+    };
+
+    priority_queue<pair <id_t, eta_t>, vector<pair <id_t, eta_t>>, Compare> frontier;
     unordered_map<id_t, id_t> came_from;
     unordered_map<id_t, eta_t> cost_so_far;
 
@@ -22,6 +32,7 @@ vector<id_t> shortest_path_dijkstra (const Graph& graph,
 
     while (!frontier.empty()) {
         pair<id_t, eta_t> current = frontier.top();
+        frontier.pop();
 
         if (current.first == end_point) {
             break;
