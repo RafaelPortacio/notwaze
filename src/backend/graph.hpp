@@ -28,8 +28,7 @@ struct Node {
     }
 
     friend double manhattan_distance(const Node& x, const Node& y) {
-        return std::max(std::abs(x.latitude - y.latitude),
-                        std::abs(x.longitude - y.longitude));
+        return std::abs(x.latitude - y.latitude) + std::abs(x.longitude - y.longitude);
     }
 };
 
