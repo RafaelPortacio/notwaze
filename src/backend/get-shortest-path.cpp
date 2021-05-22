@@ -8,7 +8,7 @@
 
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
+    if (argc != 5) {
         std::cerr << "Usage: " << argv[0] << " <METHOD> <GRAPH_FILE> <START_NODE> <END_NODE>" << std::endl;
         return 2;
     }
