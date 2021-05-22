@@ -10,7 +10,7 @@ endnl () {
 }
 
 trim() {
-    sed 's/ *\(.\+\) */\1/'
+    sed 's/[ \r]*\([0-9]\+\( [0-9]\+\)\+\)[ \r]*/\1/'
 }
 
 for input_graph in "$INPUTS_DIR"/*.json
