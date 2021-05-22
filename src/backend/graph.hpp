@@ -11,17 +11,16 @@ using id_t = unsigned int; // we could use size_t, but unsigned int seems to be
 using eta_t = double; // in minutes
 
 
+struct Node {
+    double latitude;
+    double longitude;
+};
+
+struct Edge {
+    eta_t eta;
+};
+
 class Graph {
-    public:
-        struct Node {
-            double latitude;
-            double longitude;
-        };
-
-        struct Edge {
-            eta_t eta;
-        };
-
     private:
         std::unordered_map<id_t, Node> _nodes;
         std::unordered_map<id_t, std::vector<std::pair<id_t, Edge>>> _edges;
