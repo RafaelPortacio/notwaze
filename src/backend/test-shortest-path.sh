@@ -13,8 +13,13 @@ trim() {
     sed 's/[ \r]*\([0-9]\+\( [0-9]\+\)\+\)[ \r]*/\1/'
 }
 
+n=$(echo "$INPUTS_DIR"/*.json | wc -w)
+counter=0
+
 for input_graph in "$INPUTS_DIR"/*.json
 do
+    echo "[ $counter / $n ]"
+
     paths_file="${input_graph%.json}.txt"
     endnl "$paths_file" || { echo >> "$paths_file"; }
 
@@ -41,4 +46,6 @@ do
             exit 1
         fi
     done < "$paths_file"
+
+    counter=$((counter+1))
 done
