@@ -1,12 +1,17 @@
 import json
+import os
 from tqdm import trange
 import random as rnd
 import networkx as nx
 
 
+DEGREES = 3
+
+os.makedirs(f"test-graphs-{DEGREES}")
+
 for rep in trange(100):
     rnd.seed(rep)
-    G = nx.generators.random_graphs.connected_watts_strogatz_graph(500, 3, 0.3, seed=rep)
+    G = nx.generators.random_graphs.connected_watts_strogatz_graph(500, DEGREES, 0.3, seed=rep)
     G = G.to_directed()
     
     for iter_edge in G.edges:
@@ -34,7 +39,7 @@ for rep in trange(100):
     json_dictio['edges'] = edges
 
     #save in .json
-    with open('graph'+str(rep)+'.json', 'w') as outfile:
+    with open(f'test-graphs-{DEGREES}/graph'+str(rep)+'.json', 'w') as outfile:
         json.dump(json_dictio, outfile)
 
     #save in .txt
@@ -50,6 +55,5 @@ for rep in trange(100):
         sPath_lst.append(shortest_path_str)
         
 
-    with open('graph'+str(rep)+'.txt', 'w') as outfile:
+    with open(f'test-graphs-{DEGREES}/graph'+str(rep)+'.txt', 'w') as outfile:
         outfile.write('\n'.join(sPath_lst))
-
