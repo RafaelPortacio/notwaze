@@ -44,6 +44,10 @@ class Graph {
     public:
         Graph() = default;
 
+        const Node& operator[](const id_t& node_id) const {
+            return _nodes.at(node_id);
+        }
+
         void add_node(const id_t& id, const Node& node) {
             _nodes.insert({id, node});
         }
