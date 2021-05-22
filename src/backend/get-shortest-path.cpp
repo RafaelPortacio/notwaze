@@ -36,4 +36,5 @@ int main(int argc, char* argv[]) {
     for (const auto& node_id : shortest_path) {
         std::cout << node_id << " ";
     }
+    std::cout << std::endl;
 }

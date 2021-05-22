@@ -22,7 +22,7 @@ OBJECTS = $(patsubst %.cpp, .build/%.o, $(SOURCES))
 
 # Phonies
 .PHONY: all
-all: waze-server
+all: waze-server get-shortest-path
 
 .PHONY: serve
 serve:
