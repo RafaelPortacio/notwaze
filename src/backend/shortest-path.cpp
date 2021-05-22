@@ -58,6 +58,57 @@ vector<id_t> shortest_path_dijkstra (const Graph& graph,
         current = came_from.at(current);
         path.push_back(current);
     }
-    
-    return path;
+
+        return path;
+}
+
+vector<id_t> shortest_path_A_star (const Graph& graph,
+                                   const id_t& start_point,
+                                   const id_t& end_point) {
+    class Compare
+    {
+    public:
+        bool operator() (const pair <id_t, eta_t>& l,const pair <id_t, eta_t>& r)
+        {
+            return l.second > r.second;
+        }
+    };
+
+    priority_queue<pair <id_t, eta_t>, vector<pair <id_t, eta_t>>, Compare> frontier;
+    unordered_map<id_t, id_t> came_from;
+    unordered_map<id_t, eta_t> cost_so_far;
+
+    frontier.push({start_point, 0});
+    cost_so_far.insert({start_point, 0});
+
+    while (!frontier.empty()) {
+        pair<id_t, eta_t> current = frontier.top();
+        frontier.pop();
+
+        if (current.first == end_point) {
+            break;
+        }
+
+        for (auto iter = graph.cbegin_outedges(current.first);
+             iter != graph.cend_outedges(current.first);
+              ++iter) {
+            eta_t new_cost = cost_so_far.at(current.first) + iter->second.eta;
+
+            if (!cost_so_far.count(iter->first) || new_cost < cost_so_far.at(iter->first)) {
+                cost_so_far[iter->first] = new_cost;
+                eta_t priority = new_cost + euclidean_distance(graph[end_point], graph[iter->first]);
+                frontier.push({iter->first, priority});
+                came_from[iter->first] = current.first;
+            }
+        }
+    }
+
+    vector<id_t> path {end_point};
+    id_t current = end_point;
+    while (current != start_point) {
+        current = came_from.at(current);
+        path.push_back(current);
+    }
+
+        return path;
 }
