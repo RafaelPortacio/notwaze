@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <vector>
 #include <unordered_map>
 
@@ -37,6 +38,10 @@ class Graph {
                 _edges.insert({start_point, {}});
             _edges[start_point].push_back({end_point, edge});
         }
+        void done() {
+            for (const auto& [id, _] : _nodes)
+                _edges.insert({id, {}});
+        }
 
         size_t n_nodes() const { return _nodes.size(); }
         size_t n_edges() const {
@@ -56,9 +61,11 @@ class Graph {
         decltype(_edges)::const_iterator   cend_edges() const { return _edges.  cend(); }
 
         std::vector<std::pair<id_t, Edge>>::const_iterator cbegin_outedges(id_t origin_node) const {
+            assert(_edges.count(origin_node));
             return _edges.at(origin_node).cbegin();
         }
         std::vector<std::pair<id_t, Edge>>::const_iterator cend_outedges(id_t origin_node) const {
+            assert(_edges.count(origin_node));
             return _edges.at(origin_node).cend();
         }
 };
