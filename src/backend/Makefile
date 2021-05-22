@@ -36,10 +36,10 @@ clean:
 
 # C++ Compilation Targets
 $(OUT): $(OBJECTS)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -Wall -o $@ $^
+	$(CXX) -g $(LDFLAGS) $(LDLIBS) -Wall -o $@ $^
 
 .build/%.o: %.cpp $(HEADERS) | .build/
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CXX) -g $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 .build/:
 	mkdir -p $@
