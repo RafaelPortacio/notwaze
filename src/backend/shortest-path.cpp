@@ -55,6 +55,7 @@ vector<id_t> shortest_path_dijkstra (const Graph& graph,
         current = came_from.at(current);
         path.push_back(current);
     }
+    std::reverse(std::begin(path), std::end(path));
     
     return path;
 }
