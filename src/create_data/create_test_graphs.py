@@ -1,25 +1,10 @@
 import json
-#import osmnx as ox
-
-"""
-print("Acquiring graph...")
-G = ox.graph_from_place("Rio de Janeiro, RJ, Brasil", network_type='drive')
-print("Got the graph!")
-
-# impute speed on all edges missing data
-G = ox.add_edge_speeds(G)
-
-# calculate travel time (seconds) for all edges
-G = ox.add_edge_travel_times(G)
-print("added time info!")
-"""
-
+from tqdm import trange
 import random as rnd
 import networkx as nx
-from pyvis.network import Network
 
 
-for rep in range(1):
+for rep in trange(100):
     rnd.seed(rep)
     G = nx.generators.random_graphs.connected_watts_strogatz_graph(500, 3, 0.3, seed=rep)
     G = G.to_directed()
