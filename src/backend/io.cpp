@@ -22,7 +22,7 @@ Graph load_graph_from_json_file(const std::string& path) {
     Graph graph;
 
     for (const auto& node_data : document["nodes"].items())
-        graph.add_node(std::stoul(node_data.key()), Graph::Node {
+        graph.add_node(std::stoul(node_data.key()), Node {
             .latitude = node_data.value()["latitude"].get<double>(),
             .longitude = node_data.value()["longitude"].get<double>(),
         });
@@ -30,7 +30,7 @@ Graph load_graph_from_json_file(const std::string& path) {
     for (const auto& edge_data : document["edges"])
         graph.add_edge(std::stoul(edge_data["origin_node"].get<std::string>()),
                        std::stoul(edge_data["destination_node"].get<std::string>()),
-                       Graph::Edge { .eta = edge_data["eta"].get<double>() });
+                       Edge { .eta = edge_data["eta"].get<double>() });
 
     graph.done();
 
