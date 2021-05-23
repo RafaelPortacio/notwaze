@@ -14,16 +14,13 @@ vector<id_t> shortest_path_dijkstra (const Graph& graph,
                                      const id_t& start_point,
                                      const id_t& end_point) {
 
-    class Compare
-    {
-    public:
-        bool operator() (const pair <id_t, eta_t>& l,const pair <id_t, eta_t>& r)
-        {
+    struct Compare {
+        bool operator() (const pair<id_t, eta_t>& l, const pair<id_t, eta_t>& r) {
             return l.second > r.second;
         }
     };
 
-    priority_queue<pair <id_t, eta_t>, vector<pair <id_t, eta_t>>, Compare> frontier;
+    priority_queue<pair<id_t, eta_t>, vector<pair<id_t, eta_t>>, Compare> frontier;
     unordered_map<id_t, id_t> came_from;
     unordered_map<id_t, eta_t> cost_so_far;
 
@@ -58,8 +55,9 @@ vector<id_t> shortest_path_dijkstra (const Graph& graph,
         current = came_from.at(current);
         path.push_back(current);
     }
-
-        return path;
+    std::reverse(std::begin(path), std::end(path));
+    
+    return path;
 }
 
 vector<id_t> shortest_path_A_star (const Graph& graph,
@@ -109,6 +107,7 @@ vector<id_t> shortest_path_A_star (const Graph& graph,
         current = came_from.at(current);
         path.push_back(current);
     }
+    std::reverse(std::begin(path), std::end(path));
 
-        return path;
+    return path;
 }

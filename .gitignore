@@ -1,6 +1,7 @@
 # Build stuff:
 .build/
 waze-server
+get-shortest-path
 
 # Conan stuff:
 conan.lock
