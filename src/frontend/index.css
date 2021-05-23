@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.header {
+    width: 100%;
+    height: 2.5em;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+}
+
+.place-input {
+    margin: 0;
+    height: 100%;
+    width: calc((100% - 10em)/2);
+}
+
+.header-submit {
+    margin: 0;
+    height: 100%;
+    width: 10em;
+}
+
+#map-container {
+    position: relative;
+
+    height: calc(100% - 2.5em);
+    width:  100%;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+    height: 100%;
+    width:  100%;
+}
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border: 5px solid #000;
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(  0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
