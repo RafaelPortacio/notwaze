@@ -28,8 +28,7 @@ struct Node {
     }
 
     friend double manhattan_distance(const Node& x, const Node& y) {
-        return std::max(std::abs(x.latitude - y.latitude),
-                        std::abs(x.longitude - y.longitude));
+        return std::abs(x.latitude - y.latitude) + std::abs(x.longitude - y.longitude);
     }
 };
 
@@ -44,6 +43,10 @@ class Graph {
 
     public:
         Graph() = default;
+
+        const Node& operator[](const id_t& node_id) const {
+            return _nodes.at(node_id);
+        }
 
         void add_node(const id_t& id, const Node& node) {
             _nodes.insert({id, node});
