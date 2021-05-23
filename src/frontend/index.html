@@ -73,10 +73,17 @@ if (params.has("starting-point") && params.has("destination")) {
             let polyline = L.polyline(latlongs, {
                 color: "blue",
                 weight: 7,
-                opacity: 0.75,
-            }).addTo(leaflet_map).bindPopup("ETA: " + path["eta"] + "secs");
-            polyline.on("mouseover", _ => polyline.openPopup());
-            polyline.on("mouseout",  _ => polyline.closePopup());
+                opacity: 0.5,
+            }).addTo(leaflet_map).bindPopup("ETA: " + path["eta"] + "secs", {
+                autoPan: false,
+            });
+            polyline.on("mouseover", function(ev) {
+                polyline.openPopup();
+                polyline.getPopup().setLatLng(ev.latlng);
+            });
+            polyline.on("mouseout",  function(ev) {
+                polyline.closePopup();
+            });
             return polyline.getBounds();
         });
         leaflet_map.fitBounds(extents.reduce((acc, x) => acc.extend(x)));
