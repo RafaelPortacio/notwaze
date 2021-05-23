@@ -41,11 +41,47 @@ body {
 
         <script>
 
+// Add the map
 var leaflet_map = L.map('map').setView([51.505, -0.09], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 19,
 }).addTo(leaflet_map);
+
+// Draw shortest paths, if there are any
+var params = (new URL(document.location)).searchParams;
+
+if (params.has("starting-point") && params.has("destination")) {
+    var url = "http://localhost:8080/shortestPath?startPoint="
+        + params.get("starting-point")
+        + "&endPoint="
+        + params.get("destination");
+    fetch(url).then(function(response) {
+        return response.json();
+    }).then(function(data) {
+        console.log(data);
+        var starting_point = data["shortest-paths"][0]["path"][0];
+        var ending_point =   data["shortest-paths"][0]["path"][data["shortest-paths"][0]["path"].length-1];
+
+        // Add markers
+        L.marker([starting_point.latitude, starting_point.longitude]).addTo(leaflet_map);
+        L.marker([ending_point.  latitude, ending_point.  longitude]).addTo(leaflet_map);
+
+        // Draw lines for indicating paths
+        let extents = data["shortest-paths"].map(function(path) {
+            let latlongs = path["path"].map(x => [x.latitude, x.longitude]);
+            let polyline = L.polyline(latlongs, {
+                color: "blue",
+                weight: 7,
+                opacity: 0.75,
+            }).addTo(leaflet_map).bindPopup("ETA: " + path["eta"] + "secs");
+            polyline.on("mouseover", _ => polyline.openPopup());
+            polyline.on("mouseout",  _ => polyline.closePopup());
+            return polyline.getBounds();
+        });
+        leaflet_map.fitBounds(extents.reduce((acc, x) => acc.extend(x)));
+    });
+}
 
         </script>
     </body>
