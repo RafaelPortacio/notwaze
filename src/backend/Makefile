@@ -14,32 +14,34 @@ CPPFLAGS += -std=c++17
 CFLAGS += -Wall
 
 # Recipe-related Variables
-OUT := waze-server
-
-SOURCES = $(wildcard *.cpp)
+MAINS = server.cpp get-shortest-path.cpp
+SOURCES = $(filter-out $(MAINS), $(wildcard *.cpp))
 HEADERS = $(wildcard *.hpp)
 OBJECTS = $(patsubst %.cpp, .build/%.o, $(SOURCES))
 
 
 # Phonies
 .PHONY: all
-all: $(OUT)
+all: waze-server get-shortest-path
 
 .PHONY: serve
 serve:
-	./$(OUT)
+	./waze-server
 
 .PHONY: clean
 clean:
-	rm -f $(OUT)
+	rm -f waze-server
 	rm -rf .build
 
 # C++ Compilation Targets
-$(OUT): $(OBJECTS)
-	$(CXX) -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
+waze-server: .build/server.o $(OBJECTS)
+	$(CXX) -g -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
+
+get-shortest-path: .build/get-shortest-path.o $(OBJECTS)
+	$(CXX) -g -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 .build/%.o: %.cpp $(HEADERS) | .build/
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CXX) -g $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 .build/:
 	mkdir -p $@

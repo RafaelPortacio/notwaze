@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+#include <cmath>
 #include <vector>
 #include <unordered_map>
 
@@ -11,23 +13,41 @@ using id_t = unsigned int; // we could use size_t, but unsigned int seems to be
 using eta_t = double; // in minutes
 
 
+struct Node {
+    double latitude;
+    double longitude;
+
+    friend double squared_euclidean_distance(const Node& x, const Node& y) {
+        double latdiff  = x.latitude  - y.latitude;
+        double longdiff = x.longitude - y.longitude;
+        return latdiff*latdiff + longdiff*longdiff;
+    }
+
+    friend double euclidean_distance(const Node& x, const Node& y) {
+        return std::sqrt(squared_euclidean_distance(x, y));
+    }
+
+    friend double manhattan_distance(const Node& x, const Node& y) {
+        return std::abs(x.latitude - y.latitude) + std::abs(x.longitude - y.longitude);
+    }
+};
+
+struct Edge {
+    eta_t eta;
+};
+
 class Graph {
-    public:
-        struct Node {
-            double latitude;
-            double longitude;
-        };
-
-        struct Edge {
-            eta_t eta;
-        };
-
     private:
         std::unordered_map<id_t, Node> _nodes;
         std::unordered_map<id_t, std::vector<std::pair<id_t, Edge>>> _edges;
 
     public:
         Graph() = default;
+
+        const Node& operator[](const id_t& node_id) const {
+            assert(_nodes.count(node_id));
+            return _nodes.at(node_id);
+        }
 
         void add_node(const id_t& id, const Node& node) {
             _nodes.insert({id, node});
@@ -36,6 +56,10 @@ class Graph {
             if (!_edges.count(start_point))
                 _edges.insert({start_point, {}});
             _edges[start_point].push_back({end_point, edge});
+        }
+        void done() {
+            for (const auto& [id, _] : _nodes)
+                _edges.insert({id, {}});
         }
 
         size_t n_nodes() const { return _nodes.size(); }
@@ -56,9 +80,11 @@ class Graph {
         decltype(_edges)::const_iterator   cend_edges() const { return _edges.  cend(); }
 
         std::vector<std::pair<id_t, Edge>>::const_iterator cbegin_outedges(id_t origin_node) const {
+            assert(_edges.count(origin_node));
             return _edges.at(origin_node).cbegin();
         }
         std::vector<std::pair<id_t, Edge>>::const_iterator cend_outedges(id_t origin_node) const {
+            assert(_edges.count(origin_node));
             return _edges.at(origin_node).cend();
         }
 

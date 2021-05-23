@@ -28,18 +28,18 @@ int main() {
                      [&graph](const auto& req, const auto& params) {
                          const auto qp = restinio::parse_query(req->header().query());
 
-                         auto [path, eta] = shortest_path_dijkstra(graph, std::stoul((std::string)qp["startPoint"]), std::stoul((std::string)qp["endPoint"]));
+                         std::vector<id_t> path = shortest_path_A_star(graph, std::stoul((std::string)qp["startPoint"]), std::stoul((std::string)qp["endPoint"]));
 
                          std::vector<json> path_latlongs(path.size());
                          std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs), [&graph](id_t node_id) {
-                             const Graph::Node& node = graph.get_node(node_id);
+                             const Node& node = graph[node_id];
                              return json { {"latitude", node.latitude}, {"longitude", node.longitude} };
                          });
 
                          json out_json {
                              {"shortest-paths", json::array({
                                  json::object({
-                                     {"eta", eta},
+                                     {"eta", NAN},
                                      {"path", path_latlongs},
                                  })
                              })}
