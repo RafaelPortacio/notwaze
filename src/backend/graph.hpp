@@ -45,6 +45,7 @@ class Graph {
         Graph() = default;
 
         const Node& operator[](const id_t& node_id) const {
+            assert(_nodes.count(node_id));
             return _nodes.at(node_id);
         }
 
