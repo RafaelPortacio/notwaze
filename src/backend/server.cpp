@@ -40,7 +40,9 @@ int main() {
                          id_t starting_point_id = graph.lookup_node(starting_point).first;
                          id_t ending_point_id = graph.lookup_node(ending_point).first;
 
-                         std::vector<id_t> path = shortest_path_A_star(graph, starting_point_id, ending_point_id);
+                         std::vector<id_t> path
+                             = shortest_path(graph, starting_point_id, ending_point_id,
+                                             euclidean_heuristic);
 
                          std::vector<json> path_latlongs(path.size());
                          std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs),

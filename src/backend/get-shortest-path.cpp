@@ -22,20 +22,22 @@ int main(int argc, char* argv[]) {
     const Graph graph = load_graph_from_json_file(graph_path);
 
     // Eval shortest path
-    std::vector<id_t> shortest_path;
+    std::vector<id_t> path;
     if (method == "dijkstra") {
-        shortest_path = shortest_path_dijkstra(graph, starting_point, ending_point);
+        path = shortest_path(graph, starting_point, ending_point, dijkstra_heuristic);
     } else if (method == "astar-euclidean") {
-        shortest_path = shortest_path_A_star(graph, starting_point, ending_point);
+        path = shortest_path(graph, starting_point, ending_point, euclidean_heuristic);
+    } else if (method == "astar-manhattan") {
+        path = shortest_path(graph, starting_point, ending_point, manhattan_heuristic);
     } else {
         std::cerr << "Bad shortest path method: " << method << std::endl;
         return 1;
     }
 
-    assert(shortest_path.front() == starting_point);
-    assert(shortest_path.back()  == ending_point);
+    assert(path.front() == starting_point);
+    assert(path.back()  == ending_point);
 
-    for (const auto& node_id : shortest_path) {
+    for (const auto& node_id : path) {
         std::cout << node_id << " ";
     }
     std::cout << std::endl;
