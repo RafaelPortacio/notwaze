@@ -95,4 +95,13 @@ class Graph {
                                     return x.first == destination_node;
                                 })->second;
         }
+
+        std::pair<id_t, const Node&> lookup_node(const Node& query_node) const {
+            // TODO: we'll probably want to use a k-D tree here
+            return *std::min_element(cbegin_nodes(), cend_nodes(),
+                                     [&query_node](const auto& l, const auto& r) {
+                                         return squared_euclidean_distance(query_node, l.second)
+                                             <  squared_euclidean_distance(query_node, r.second);
+                                     });
+        }
 };
