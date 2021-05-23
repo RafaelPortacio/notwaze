@@ -54,7 +54,12 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var params = (new URL(document.location)).searchParams;
 
 async function geocode_latlong(place_str) {
-    var response = await fetch("https://nominatim.openstreetmap.org/search?street=" + place_str + "&city=Rio+de+Janeiro&country=Brasil&format=json");
+    var url = "https://nominatim.openstreetmap.org/search?"
+        + "street=" + encodeURI(place_str)
+        + "&city=Rio+de+Janeiro"
+        + "&country=Brasil"
+        + "&format=json";
+    var response = await fetch(url);
     var response = await response.json();
     console.log(response);
 
@@ -68,10 +73,10 @@ async function find_and_draw_path(starting_point_str, destination_str) {
     var [end_point_latitude, end_point_longitude]     = await geocode_latlong(destination_str);
 
     var url = "http://localhost:8080/shortestPath?"
-        + "startPointLat=" + start_point_latitude
-        + "&startPointLong=" + start_point_longitude
-        + "&endPointLat=" + end_point_latitude
-        + "&endPointLong=" + end_point_longitude;
+        + "startPointLat=" + encodeURI(start_point_latitude)
+        + "&startPointLong=" + encodeURI(start_point_longitude)
+        + "&endPointLat=" + encodeURI(end_point_latitude)
+        + "&endPointLong=" + encodeURI(end_point_longitude);
     var data = await fetch(url);
     var data = await data.json();
 
