@@ -73,7 +73,7 @@ async function find_and_draw_path(starting_point_str, destination_str) {
             color: "blue",
             weight: 7,
             opacity: 0.5,
-        }).addTo(leaflet_map).bindPopup("ETA: " + humanizeDuration(1000 * path["eta"]), {
+        }).addTo(leaflet_map).bindPopup("ETA: " + humanizeDuration(1000 * Math.round(path["eta"])), {
             autoPan: false,
         });
         polyline.on("mouseover", function(ev) {
