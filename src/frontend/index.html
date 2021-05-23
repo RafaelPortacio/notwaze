@@ -19,27 +19,74 @@ body {
 }
 
 .header {
-    height: 3em;
-    padding: 4px;
+    width: 100%;
+    height: 2.5em;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+}
+
+.place-input {
+    margin: 0;
+    height: 100%;
+    width: calc((100% - 10em)/2);
+}
+
+.header-submit {
+    margin: 0;
+    height: 100%;
+    width: 10em;
+}
+
+#map-container {
+    position: relative;
+
+    height: calc(100% - 2.5em);
+    width:  100%;
 }
 
 #map {
-    height: calc(100% - 3em);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+    height: 100%;
     width:  100%;
+}
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border: 5px solid #000;
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(  0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
         </style>
     </head>
     <body>
         <div class="header">
-            <form>
-                <input class="header" style="width: 40%" type="text" id="starting-point-input" name="starting-point" placeholder="Starting Location..." />
-                <input class="header" style="width: 40%" type="text" id="destination-input"    name="destination" placeholder="Destination..." />
-                <input class="header" style="width: 18%" type="submit" value="Go" />
+            <form class="header">
+                <input class="header place-input" type="text" id="starting-point-input" name="starting-point" placeholder="Starting Location..." /><input class="header place-input" type="text" id="destination-input"    name="destination" placeholder="Destination..." /><input class="header header-submit" type="submit" value="Go" />
             </form>
         </div>
 
-        <div id="map"></div>
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
 
         <script>
 
@@ -110,7 +157,14 @@ async function find_and_draw_path(starting_point_str, destination_str) {
 }
 
 if (params.has("starting-point") && params.has("destination")) {
-    find_and_draw_path(params.get("starting-point"), params.get("destination"));
+    let map_container = document.getElementById("map-container");
+    let loader_div = document.createElement("div");
+    loader_div.id = "path-loader";
+    loader_div.className = "loader";
+    map_container.appendChild(loader_div);
+
+    find_and_draw_path(params.get("starting-point"), params.get("destination"))
+        .then(_ => document.getElementById("path-loader").remove());
 }
 
         </script>
