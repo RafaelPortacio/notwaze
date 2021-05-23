@@ -28,6 +28,9 @@ all: waze-server get-shortest-path
 serve:
 	./waze-server
 
+.PHONY: test
+test: test-dijkstra test-astar
+
 .PHONY: clean
 clean:
 	rm -f waze-server
@@ -50,3 +53,8 @@ get-shortest-path: .build/get-shortest-path.o $(OBJECTS)
 .build/conanbuildinfo.mak: conanfile.txt | .build/
 	cp $< .build/
 	cd .build && conan install . --build=missing
+
+# Tests
+.PHONY: test-dijkstra
+test-dijkstra: ../../test-graphs get-shortest-path test-shortest-path.sh
+	./test-shortest-path.sh $< dijkstra
