@@ -31,15 +31,23 @@ int main() {
                          std::vector<id_t> path = shortest_path_A_star(graph, std::stoul((std::string)qp["startPoint"]), std::stoul((std::string)qp["endPoint"]));
 
                          std::vector<json> path_latlongs(path.size());
-                         std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs), [&graph](id_t node_id) {
-                             const Node& node = graph[node_id];
-                             return json { {"latitude", node.latitude}, {"longitude", node.longitude} };
-                         });
+                         std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs),
+                                        [&graph](id_t node_id) {
+                                            const Node& node = graph[node_id];
+                                            return json {
+                                                {"latitude", node.latitude},
+                                                {"longitude", node.longitude}
+                                            };
+                                        });
+                         eta_t eta = 0;
+                         for (size_t i = 0; i < path.size()-1; ++i) {
+                             eta += graph.get_edge(path[i], path[i+1]).eta;
+                         }
 
                          json out_json {
                              {"shortest-paths", json::array({
                                  json::object({
-                                     {"eta", NAN},
+                                     {"eta", eta},
                                      {"path", path_latlongs},
                                  })
                              })}

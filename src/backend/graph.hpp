@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 
 using id_t = unsigned int; // we could use size_t, but unsigned int seems to be
@@ -88,7 +89,10 @@ class Graph {
             return _edges.at(origin_node).cend();
         }
 
-        const Node& get_node(id_t node_id) const {
-            return _nodes.at(node_id);
+        const Edge& get_edge(id_t origin_node, id_t destination_node) const {
+            return std::find_if(cbegin_outedges(origin_node), cend_outedges(origin_node),
+                                [destination_node](const auto& x) {
+                                    return x.first == destination_node;
+                                })->second;
         }
 };
