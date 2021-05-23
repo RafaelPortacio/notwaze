@@ -25,6 +25,8 @@ int main(int argc, char* argv[]) {
     std::vector<id_t> shortest_path;
     if (method == "dijkstra") {
         shortest_path = shortest_path_dijkstra(graph, starting_point, ending_point);
+    } else if (method == "astar-euclidean") {
+        shortest_path = shortest_path_A_star(graph, starting_point, ending_point);
     } else {
         std::cerr << "Bad shortest path method: " << method << std::endl;
         return 1;
