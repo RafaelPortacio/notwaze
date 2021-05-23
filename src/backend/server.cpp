@@ -54,6 +54,7 @@ int main() {
                          };
 
                          return req->create_response()
+                             .append_header(restinio::http_field_t::access_control_allow_origin, "*")
                              .set_body(out_json.dump())
                              .done();
                      });
