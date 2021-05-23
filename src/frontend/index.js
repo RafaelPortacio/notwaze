@@ -69,6 +69,8 @@ async function find_and_draw_path(starting_point_str, destination_str) {
     // Draw lines for indicating paths
     let extents = data["shortest-paths"].map(function(path) {
         let latlongs = path["path"].map(x => [x.latitude, x.longitude]);
+        latlongs.unshift([starting_point.latitude, starting_point.longitude]);
+        latlongs.push   ([  ending_point.latitude,   ending_point.longitude]);
         let polyline = L.polyline(latlongs, {
             color: "blue",
             weight: 7,
