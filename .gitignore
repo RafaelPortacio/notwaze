@@ -1,5 +1,6 @@
 # Build stuff:
 .build/
+src/frontend/dist/
 waze-server
 get-shortest-path
 
