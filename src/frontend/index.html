@@ -6,6 +6,8 @@
         <!-- Include Leaflet -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+        <!-- Include "humanize-duration" -->
+        <script src="https://unpkg.com/humanize-duration@3.26.0/humanize-duration.js"></script>
 
         <style>
 
@@ -74,7 +76,7 @@ if (params.has("starting-point") && params.has("destination")) {
                 color: "blue",
                 weight: 7,
                 opacity: 0.5,
-            }).addTo(leaflet_map).bindPopup("ETA: " + path["eta"] + "secs", {
+            }).addTo(leaflet_map).bindPopup("ETA: " + humanizeDuration(1000 * path["eta"]), {
                 autoPan: false,
             });
             polyline.on("mouseover", function(ev) {
