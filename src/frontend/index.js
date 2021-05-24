@@ -55,7 +55,7 @@ async function find_and_draw_path(starting_point, destination) {
         var [end_point_latitude, end_point_longitude] = destination;
 
     var url = "http://localhost:8080/shortestPath?"
-        + "method=" + encodeURI(params.get("method", "astar-euclidean"))
+        + "method=" + encodeURI(params.get("method") ?? "astar-euclidean")
         + "&startPointLat=" + encodeURI(start_point_latitude)
         + "&startPointLong=" + encodeURI(start_point_longitude)
         + "&endPointLat=" + encodeURI(end_point_latitude)
@@ -78,11 +78,14 @@ async function find_and_draw_path(starting_point, destination) {
     function dragEnd(ev) {
         let start = marker_start.getLatLng();
         let end   = marker_end.getLatLng();
-        window.location.assign(window.location.origin + "/?"
-                               + "start-lat=" + start.lat
-                               + "&start-long=" + start.lng
-                               + "&end-lat=" + end.lat
-                               + "&end-long=" + end.lng);
+        let new_url = window.location.origin + "/?"
+            + "start-lat=" + start.lat
+            + "&start-long=" + start.lng
+            + "&end-lat=" + end.lat
+            + "&end-long=" + end.lng;
+        if (params.has("method"))
+            new_url = new_url + "&method=" + params.get("method");
+        window.location.assign(new_url);
     }
     marker_start.on("dragend", dragEnd);
     marker_end.on("dragend", dragEnd);
