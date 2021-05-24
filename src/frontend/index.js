@@ -8,7 +8,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(leaflet_map);
 
 // Draw shortest paths, if there are any
-var params = (new URL(document.location)).searchParams;
+var url = new URL(document.location);
+var params = url.searchParams;
 
 class GeocodingError extends Error {
     constructor(place_str) {
@@ -43,9 +44,15 @@ async function geocode_latlong(place_str) {
     return [place.lat, place.lon];
 }
 
-async function find_and_draw_path(starting_point_str, destination_str) {
-    var [start_point_latitude, start_point_longitude] = await geocode_latlong(starting_point_str);
-    var [end_point_latitude, end_point_longitude]     = await geocode_latlong(destination_str);
+async function find_and_draw_path(starting_point, destination) {
+    if (typeof starting_point === "string")
+        var [start_point_latitude, start_point_longitude] = await geocode_latlong(starting_point);
+    else
+        var [start_point_latitude, start_point_longitude] = starting_point;
+    if (typeof destination === "string")
+        var [end_point_latitude, end_point_longitude] = await geocode_latlong(destination);
+    else
+        var [end_point_latitude, end_point_longitude] = destination;
 
     var url = "http://localhost:8080/shortestPath?"
         + "startPointLat=" + encodeURI(start_point_latitude)
@@ -63,8 +70,20 @@ async function find_and_draw_path(starting_point_str, destination_str) {
     var ending_point =   data["shortest-paths"][0]["path"][data["shortest-paths"][0]["path"].length-1];
 
     // Add markers
-    L.marker([starting_point.latitude, starting_point.longitude]).addTo(leaflet_map);
-    L.marker([ending_point.  latitude, ending_point.  longitude]).addTo(leaflet_map);
+    let marker_opts = {draggable: true, autoPan: true}
+    let marker_start = L.marker([starting_point.latitude, starting_point.longitude], marker_opts).addTo(leaflet_map);
+    let marker_end = L.marker([ending_point.  latitude, ending_point.  longitude], marker_opts).addTo(leaflet_map);
+    function dragEnd(ev) {
+        let start = marker_start.getLatLng();
+        let end   = marker_end.getLatLng();
+        window.location.assign(window.location.origin + "/?"
+                               + "start-lat=" + start.lat
+                               + "&start-long=" + start.lng
+                               + "&end-lat=" + end.lat
+                               + "&end-long=" + end.lng);
+    }
+    marker_start.on("dragend", dragEnd);
+    marker_end.on("dragend", dragEnd);
 
     // Draw lines for indicating paths
     let extents = data["shortest-paths"].map(function(path) {
@@ -93,14 +112,26 @@ async function find_and_draw_path(starting_point_str, destination_str) {
 document.getElementById("starting-point-input").value = params.get("starting-point", "");
 document.getElementById("destination-input").value = params.get("destination", "");
 
-if (params.has("starting-point") && params.has("destination")) {
+let has_text_inputs = params.has("starting-point") && params.has("destination");
+let has_coord_inputs = params.has("start-lat") && params.has("start-long") && params.has("end-lat") && params.has("end-long");
+
+if (has_text_inputs || has_coord_inputs) {
     let map_container = document.getElementById("map-container");
     let loader_div = document.createElement("div");
     loader_div.id = "path-loader";
     loader_div.className = "loader";
     map_container.appendChild(loader_div);
 
-    find_and_draw_path(params.get("starting-point"), params.get("destination"))
+    let starting_point, destination;
+    if (has_text_inputs) {
+        starting_point = params.get("starting-point");
+        destination = params.get("destination");
+    } else {
+        starting_point = [params.get("start-lat"), params.get("start-long")];
+        destination = [params.get("end-lat"), params.get("end-long")];
+    }
+
+    find_and_draw_path(starting_point, destination)
         .then(_ => document.getElementById("path-loader").remove())
         .catch(err => {
             if (err instanceof GeocodingError) {
