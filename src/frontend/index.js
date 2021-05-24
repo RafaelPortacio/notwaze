@@ -90,6 +90,9 @@ async function find_and_draw_path(starting_point_str, destination_str) {
     leaflet_map.fitBounds(extents.reduce((acc, x) => acc.extend(x)));
 }
 
+document.getElementById("starting-point-input").value = params.get("starting-point", "");
+document.getElementById("destination-input").value = params.get("destination", "");
+
 if (params.has("starting-point") && params.has("destination")) {
     let map_container = document.getElementById("map-container");
     let loader_div = document.createElement("div");
