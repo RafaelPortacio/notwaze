@@ -1,7 +1,7 @@
 'use strict';
 
 // Add the map
-var leaflet_map = L.map('map').setView([51.505, -0.09], 13);
+var leaflet_map = L.map('map').setView([-22.941901818500057, -43.18015336990357], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 19,
