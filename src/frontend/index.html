@@ -27,11 +27,12 @@
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </button>
                     <div class="dropdown-content">
-                        <label>Shortest-Path Method</label>
+                        <label for="method-input">Shortest-Path Method</label>
+                        <br>
                         <select name="method" id="method-input">
+                            <option value="astar-euclidean">A* with Euclidean Heuristic</option>
+                            <option value="astar-manhattan">A* with Manhattan Heuristic</option>
                             <option value="dijkstra">Dijkstra</option>
-                            <option value="astar-manhattan">A* with Euclidean Metric</option>
-                            <option value="astar-manhattan">A* with Manhattan Metric</option>
                         </select>
                     </div>
                 </div>
