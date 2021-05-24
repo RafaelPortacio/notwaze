@@ -19,9 +19,22 @@
             <form class="header"><!--
                 --><input class="header place-input interactable" type="text" id="starting-point-input" name="starting-point" placeholder="Starting Location..." autocomplete="off" /><!--
                 --><input class="header place-input interactable" type="text" id="destination-input"    name="destination" placeholder="Destination..." autocomplete="off" /><!--
-                --><button class="header header-submit interactable" type="submit">
+                --><button class="header header-bit interactable" type="submit">
                     <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                </button>
+                </button><!--
+                --><div class="dropdown">
+                    <button class="header header-bit interactable" onclick="return false;">
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <label>Shortest-Path Method</label>
+                        <select name="method" id="method-input">
+                            <option value="dijkstra">Dijkstra</option>
+                            <option value="astar-manhattan">A* with Euclidean Metric</option>
+                            <option value="astar-manhattan">A* with Manhattan Metric</option>
+                        </select>
+                    </div>
+                </div>
             </form>
         </div>
 

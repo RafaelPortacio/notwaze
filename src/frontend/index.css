@@ -43,7 +43,7 @@ body {
     height: 2.5em;
     margin-left: auto;
     margin-right: auto;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .interactable {
@@ -64,14 +64,14 @@ body {
     border-radius: 3px;
     margin: 1px;
     height: calc(100% - 2px);
-    width: calc((100% - 5em)/2 - 2px);
+    width: calc((100% - 10em)/2 - 2px);
 
     background-color: var(--surface);
     border-color: var(--surface);
     color: var(--high-text);
 }
 
-.header-submit {
+.header-bit {
     border: 0;
     border-radius: 3px;
     margin: 1px;
@@ -80,6 +80,31 @@ body {
 
     background-color: var(--surface);
     color: var(--high-text);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    left: calc(100% - 33vw);
+    width: 33vw;
+    padding: 10px;
+
+    background-color: var(--surface-hover);
+    color: var(--normal-text);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover button {
+    background-color: var(--surface-hover);
 }
 
 .leaflet-popup-tip-container {
@@ -112,7 +137,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: 2;
+    z-index: 3;
 
     display: inline-block;
     width: 100px;
