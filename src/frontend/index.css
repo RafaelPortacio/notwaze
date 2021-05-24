@@ -1,4 +1,40 @@
+/* Variables & Themes */
+
+/* Light theme: */
+:root {
+    --background: #FFFFFF;
+    --foreground: #000000;
+    --primary: #6200EE;
+    --primary-alt: #3700B3;
+    --secondary: #03DAC6;
+}
+
+/* Dark theme: */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #121212;
+        --foreground: #FFFFFF;
+
+        --normal-text: rgba(255, 255, 255, 0.6);
+        --high-text: rgba(255, 255, 255, 0.87);
+        --dim-text: rgba(255, 255, 255, 0.38);
+        --component-text: #000000;
+
+        --surface: #121212;
+        --surface-hover: #383838;
+
+        --primary: #BB86FC;
+        --primary-alt: #3700B3;
+        --secondary: #03DAC6;
+    }
+}
+
+/* Layout */
+
 body {
+    background-color: var(--background);
+    color: var(--foreground);
+
     margin: 0;
     padding: 0;
     width: 100vw;
@@ -13,16 +49,49 @@ body {
     overflow: hidden;
 }
 
+.interactable {
+    background-blend-mode: overlay;
+    transition: background-color 0.1s;
+}
+
+.interactable:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.interactable:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+    /* TODO: stroke */
+}
+
 .place-input {
-    margin: 0;
-    height: 100%;
-    width: calc((100% - 10em)/2);
+    border: 0;
+    border-radius: 3px;
+    margin: 1px;
+    height: calc(100% - 2px);
+    width: calc((100% - 5em)/2 - 2px);
+
+    background-color: var(--surface);
+    color: var(--foreground);
 }
 
 .header-submit {
-    margin: 0;
-    height: 100%;
-    width: 10em;
+    border: 0;
+    border-radius: 3px;
+    margin: 1px;
+    height: calc(100% - 2px);
+    width: calc(5em - 2px);
+
+    background-color: var(--surface);
+    color: var(--foreground);
+}
+
+.leaflet-popup-tip-container {
+    color: var(--surface);
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-content {
+    background-color: var(--surface);
+    color: var(--high-text);
 }
 
 #map-container {
