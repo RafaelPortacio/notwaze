@@ -8,6 +8,8 @@
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
         <!-- Include "humanize-duration" -->
         <script src="https://unpkg.com/humanize-duration@3.26.0/humanize-duration.js"></script>
+        <!-- Include font-awesome -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
 
         <!-- Include CSS -->
         <link rel="stylesheet" href="index.css">
@@ -15,7 +17,7 @@
     <body>
         <div class="header">
             <form class="header">
-                <input class="header place-input interactable" type="text" id="starting-point-input" name="starting-point" placeholder="Starting Location..." /><input class="header place-input interactable" type="text" id="destination-input"    name="destination" placeholder="Destination..." /><input class="header header-submit interactable" type="submit" value="Go" />
+                <input class="header place-input interactable" type="text" id="starting-point-input" name="starting-point" placeholder="Starting Location..." autocomplete="off" /><input class="header place-input interactable" type="text" id="destination-input"    name="destination" placeholder="Destination..." autocomplete="off" /><button class="header header-submit interactable" type="submit"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
             </form>
         </div>
 
