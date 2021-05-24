@@ -1,4 +1,5 @@
 #include <iostream>
+#include <functional>
 
 #include <restinio/all.hpp>
 #include <nlohmann/json.hpp>
@@ -36,13 +37,22 @@ int main() {
                              .latitude = std::stod((std::string)qp["endPointLat"]),
                              .longitude = std::stod((std::string)qp["endPointLong"]),
                          };
+                         std::string method = (std::string)qp["method"];
 
                          id_t starting_point_id = graph.lookup_node(starting_point).first;
                          id_t ending_point_id = graph.lookup_node(ending_point).first;
 
+                         std::function<eta_t(const Node&, const Node&)> heuristic;
+                         if (method == "dijkstra")
+                             heuristic = dijkstra_heuristic;
+                         else if (method == "astar-euclidean")
+                             heuristic = dijkstra_heuristic;
+                         else if (method == "astar-manhattan")
+                             heuristic = dijkstra_heuristic;
+                         else
+                             throw std::runtime_error("Bad method");
                          std::vector<id_t> path
-                             = shortest_path(graph, starting_point_id, ending_point_id,
-                                             euclidean_heuristic);
+                             = shortest_path(graph, starting_point_id, ending_point_id, heuristic);
 
                          std::vector<json> path_latlongs(path.size());
                          std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs),

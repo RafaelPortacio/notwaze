@@ -55,7 +55,8 @@ async function find_and_draw_path(starting_point, destination) {
         var [end_point_latitude, end_point_longitude] = destination;
 
     var url = "http://localhost:8080/shortestPath?"
-        + "startPointLat=" + encodeURI(start_point_latitude)
+        + "method=astar-euclidean"
+        + "&startPointLat=" + encodeURI(start_point_latitude)
         + "&startPointLong=" + encodeURI(start_point_longitude)
         + "&endPointLat=" + encodeURI(end_point_latitude)
         + "&endPointLong=" + encodeURI(end_point_longitude);
