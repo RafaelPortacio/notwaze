@@ -3,7 +3,6 @@
 /* Light theme: */
 :root {
     --background: #FFFFFF;
-    --foreground: #000000;
     --primary: #6200EE;
     --primary-alt: #3700B3;
     --secondary: #03DAC6;
@@ -13,12 +12,10 @@
 @media (prefers-color-scheme: dark) {
     :root {
         --background: #121212;
-        --foreground: #FFFFFF;
 
         --normal-text: rgba(255, 255, 255, 0.6);
         --high-text: rgba(255, 255, 255, 0.87);
         --dim-text: rgba(255, 255, 255, 0.38);
-        --component-text: #000000;
 
         --surface: #121212;
         --surface-hover: #383838;
@@ -33,7 +30,7 @@
 
 body {
     background-color: var(--background);
-    color: var(--foreground);
+    color: var(--normal-text);
 
     margin: 0;
     padding: 0;
@@ -50,6 +47,7 @@ body {
 }
 
 .interactable {
+    border: 1px solid;
     background-blend-mode: overlay;
     transition: background-color 0.1s;
 }
@@ -60,18 +58,17 @@ body {
 
 .interactable:focus {
     background-color: rgba(255, 255, 255, 0.12);
-    /* TODO: stroke */
 }
 
 .place-input {
-    border: 0;
     border-radius: 3px;
     margin: 1px;
     height: calc(100% - 2px);
     width: calc((100% - 5em)/2 - 2px);
 
     background-color: var(--surface);
-    color: var(--foreground);
+    border-color: var(--surface);
+    color: var(--high-text);
 }
 
 .header-submit {
@@ -82,7 +79,7 @@ body {
     width: calc(5em - 2px);
 
     background-color: var(--surface);
-    color: var(--foreground);
+    color: var(--high-text);
 }
 
 .leaflet-popup-tip-container {
@@ -120,9 +117,9 @@ body {
     display: inline-block;
     width: 100px;
     height: 100px;
-    border: 5px solid #000;
+    border: 10px solid var(--surface);
     border-radius: 50%;
-    border-top-color: #fff;
+    border-top-color: var(--primary);
     animation: spin 1s ease-in-out infinite;
 }
 
