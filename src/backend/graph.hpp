@@ -31,6 +31,44 @@ struct Node {
     friend double manhattan_distance(const Node& x, const Node& y) {
         return std::abs(x.latitude - y.latitude) + std::abs(x.longitude - y.longitude);
     }
+
+    friend double distance_to_segment(const Node& s1,
+                                      const Node& s2,
+                                      const Node& p) {
+        
+
+        auto pair_dot_prod = [](std::pair<double, double> vec1,
+                             std::pair<double, double> vec2) {
+            return vec1.first*vec2.first + vec1.second*vec2.second;
+        };
+
+        auto pair_cross_prod = [](std::pair<double, double> vec1,
+                               std::pair<double, double> vec2) {
+            return vec1.first*vec2.second - vec1.second*vec2.first;
+        };
+
+
+        std::pair<double, double> vec_s1_to_p;
+        vec_s1_to_p.first = p.latitude - s1.latitude;
+        vec_s1_to_p.second = p.longitude - s1.longitude;
+        
+        std::pair<double, double> vec_s2_to_p;
+        vec_s2_to_p.first = p.latitude - s2.latitude;
+        vec_s2_to_p.second = p.longitude - s2.longitude;
+        
+        std::pair<double, double> vec_s1_to_s2;
+        vec_s1_to_s2.first = s2.latitude - s1.latitude;
+        vec_s1_to_s2.second = s2.longitude - s1.longitude;
+        
+        if (pair_dot_prod(vec_s1_to_p, vec_s1_to_s2) < 0){
+            return euclidean_distance(s1, p);
+        }else if(-pair_dot_prod(vec_s2_to_p, vec_s1_to_s2) < 0){
+            return euclidean_distance(s2, p);
+        }else{
+            return std::abs(pair_cross_prod(vec_s1_to_p, vec_s2_to_p))/
+                   euclidean_distance(s1, s2);
+        }
+    }
 };
 
 struct Edge {
