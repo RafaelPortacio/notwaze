@@ -108,11 +108,7 @@ body {
     background-color: var(--surface-hover);
 }
 
-.leaflet-popup-tip-container {
-    color: var(--surface);
-}
-
-.leaflet-popup-content-wrapper, .leaflet-popup-content {
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background-color: var(--surface);
     color: var(--high-text);
 }

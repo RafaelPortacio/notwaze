@@ -101,6 +101,7 @@ async function find_and_draw_path(starting_point, destination) {
             opacity: 0.5,
         }).addTo(leaflet_map).bindPopup("ETA: " + humanizeDuration(1000 * Math.round(path["eta"])), {
             autoPan: false,
+            closeButton: false,
         });
         polyline.on("mouseover", function(ev) {
             polyline.openPopup();
