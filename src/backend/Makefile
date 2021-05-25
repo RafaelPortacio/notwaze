@@ -19,6 +19,16 @@ SOURCES = $(filter-out $(MAINS), $(wildcard *.cpp))
 HEADERS = $(wildcard *.hpp)
 OBJECTS = $(patsubst %.cpp, .build/%.o, $(SOURCES))
 
+# Compilation mode
+OPTIMIZE ?= yes
+ifeq ($(OPTIMIZE),yes)
+    CXXFLAGS += -O3 -march=native
+    LDFLAGS  += -O3 -march=native
+else ifeq ($(OPTIMIZE),no)
+else
+    $(error "bad value for OPTIMIZE: $(OPTIMIZE); must be 'yes' or 'no' (default='yes').")
+endif
+
 
 # Phonies
 .PHONY: all
