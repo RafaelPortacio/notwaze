@@ -1,11 +1,63 @@
 # Final project
 
-O projeto final é uma aplicação similar ao `Waze` que computa o menor caminho entre dois pontos. O projeto deve apenas considerar a cidade do Rio de Janeiro. Os dados podem ser baixados no site https://www.openstreetmap.org. Para facilitar a obtenção dos dados, é permitido usar a biblioteca `osmnx` como descrito em https://geoffboeing.com/2016/11/osmnx-python-street-networks/.
+## Code organization
 
-## Back end
-O back-end do projeto deve ser feito em C++. O programa deve computar o menor caminho pelas ruas dado dois pontos e o algoritmo a ser usado: Dijkstra ou A*.
+Our code is split into three components:
 
-## Front end
-O front-end do projeto deve ser um webapp para a interface gráfica. O usuário deve poder escolher dois pontos da cidade e o algoritmo que vai computar o menor caminho. Além disso, deve haver um modo de exibição que mostra os trajetos sendo considerados pelo algoritmo.
+- `create_data` ([`src/create_data`](/src/create_data));
 
-A interface deve exibir o mapa das ruas da cidade, os dois pontos extremos, o caminho ótimo e os caminhos sendo considerados (somente quanto pedido).
+  Creates/Fetches graphs and saves them in a specified JSON format;
+
+- `backend` ([`src/backend`](/src/backend)); and
+
+  Transforms Latitude+Longitude into a node;
+  Calculates the shortest path between two nodes;
+  Provides an executable to try out the shortest path calculation;
+  Provides an executable that serves a REST API;
+
+- `frontend` ([`src/frontend`](/src/frontend)).
+
+  Provides a nice user interface that uses the aforementioned REST API (provided by the `backend`) to calculate the shortest paths;
+
+## Dependencies
+
+- `create_data`
+  - `tqdm` (`pip install tqdm` / `conda install -c conda-forge tqdm`)
+  - `networkx` (`pip install networkx` / `conda install networkx`)
+  - `osmnx` (See https://osmnx.readthedocs.io/en/stable/#installation)
+- `backend`
+  - [`conan`](https://conan.io/) (for automatic C++ dependency management)
+
+    Note that our makefile already runs the necessary `conan` commands for you -- you just need to have it installed.
+  - _Other dependencies are automatically managed by conan._
+- `frontend`
+  - Python 3 (for launching the web server via `python -m http.server`)
+  - [Babel](https://babeljs.io/) (for compiling modern JS into browser-compatible JS)
+
+## How to run
+
+First, generate the graph of Rio's streets:
+
+```sh
+python src/create_data/create_graph_database.py
+```
+
+Then, compile the backend:
+
+```sh
+make -C src/backend
+```
+
+Then, run the backend; this will launch the backend server on `localhost:8080`:
+
+```sh
+src/backend/waze-server
+```
+
+Then, compile and serve the frontend; this will launch the frontend server on `localhost:8000`:
+
+```sh
+make -C src/frontend
+```
+
+Finally, go with your browser to [localhost:8000/](http://localhost:8000/).
