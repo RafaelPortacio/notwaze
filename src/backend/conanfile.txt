@@ -1,7 +1,6 @@
 [requires]
 nlohmann_json/3.9.1
 restinio/0.6.13
-fmt/7.1.3
 
 [generators]
 make
