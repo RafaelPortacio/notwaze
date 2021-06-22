@@ -45,9 +45,9 @@ int main() {
                          if (method == "dijkstra")
                              heuristic = dijkstra_heuristic;
                          else if (method == "astar-euclidean")
-                             heuristic = dijkstra_heuristic;
+                             heuristic = euclidean_heuristic;
                          else if (method == "astar-manhattan")
-                             heuristic = dijkstra_heuristic;
+                             heuristic = manhattan_heuristic;
                          else
                              throw std::runtime_error("Bad method");
                          std::vector<id_t> path
