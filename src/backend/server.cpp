@@ -14,8 +14,6 @@ using json = nlohmann::json;
 int main() {
     const Graph graph = load_graph_from_json_file("rj_graph_database.json");
 
-    // std::cout << "n_nodes = " << graph.n_nodes() << std::endl;
-    // std::cout << "n_edges = " << graph.n_edges() << std::endl;
     std::cout << "Loaded the graph." << std::endl;
 
     auto router = std::make_unique<restinio::router::express_router_t<>>();
