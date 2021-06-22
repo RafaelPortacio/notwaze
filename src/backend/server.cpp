@@ -50,31 +50,41 @@ int main() {
                              heuristic = manhattan_heuristic;
                          else
                              throw std::runtime_error("Bad method");
-                         std::vector<id_t> path
+                         std::optional<std::vector<id_t>> maybe_path
                              = shortest_path(graph, starting_point_id, ending_point_id, heuristic);
 
-                         std::vector<json> path_latlongs(path.size());
-                         std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs),
-                                        [&graph](id_t node_id) {
-                                            const Node& node = graph[node_id];
-                                            return json {
-                                                {"latitude", node.latitude},
-                                                {"longitude", node.longitude}
-                                            };
-                                        });
-                         eta_t eta = 0;
-                         for (size_t i = 0; i < path.size()-1; ++i) {
-                             eta += graph.get_edge(path[i], path[i+1]).eta;
-                         }
+                         json out_json;
+                         if (maybe_path) {
+                             std::vector<id_t> path = *maybe_path;
+                             std::vector<json> path_latlongs(path.size());
+                             std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs),
+                                            [&graph](id_t node_id) {
+                                                const Node& node = graph[node_id];
+                                                return json {
+                                                    {"latitude", node.latitude},
+                                                    {"longitude", node.longitude}
+                                                };
+                                            });
+                             eta_t eta = 0;
+                             for (size_t i = 0; i < path.size()-1; ++i) {
+                                 eta += graph.get_edge(path[i], path[i+1]).eta;
+                             }
 
-                         json out_json {
-                             {"shortest-paths", json::array({
-                                 json::object({
-                                     {"eta", eta},
-                                     {"path", path_latlongs},
-                                 })
-                             })}
-                         };
+                             json&& json {
+                                 {"shortest-paths", json::array({
+                                     json::object({
+                                         {"eta", eta},
+                                         {"path", path_latlongs},
+                                     })
+                                 })}
+                             };
+                             out_json = json;
+                         } else {
+                             json&& json {
+                                 {"shortest-paths", json::array({})}
+                             };
+                             out_json = json;
+                         }
 
                          return req->create_response()
                              .append_header(restinio::http_field_t::access_control_allow_origin, "*")

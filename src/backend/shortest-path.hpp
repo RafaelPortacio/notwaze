@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tuple>
+#include <optional>
 #include <vector>
 #include <algorithm>
 #include <queue>
@@ -9,8 +10,12 @@
 
 
 template <typename Heuristic>
-std::vector<id_t> shortest_path(const Graph& graph, const id_t& start_point, const id_t& end_point,
+std::optional<std::vector<id_t>> shortest_path(const Graph& graph, const id_t& start_point, const id_t& end_point,
                                 Heuristic heuristic) {
+    if (start_point == end_point) {
+        return {{start_point}};
+    }
+
     struct Compare {
         bool operator() (const std::pair<id_t, eta_t>& l, const std::pair<id_t, eta_t>& r) {
             return l.second > r.second;
@@ -44,6 +49,11 @@ std::vector<id_t> shortest_path(const Graph& graph, const id_t& start_point, con
                 came_from[iter->first] = current.first;
             }
         }
+    }
+
+    if (came_from.find(end_point) == came_from.cend()) {
+        // If `end_point` isn't in `came_from`, then we haven't really found a path
+        return std::nullopt;
     }
 
     std::vector<id_t> path {end_point};
