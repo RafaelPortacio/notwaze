@@ -39,7 +39,7 @@ serve:
 	./waze-server
 
 .PHONY: test
-test: test-dijkstra test-astar
+test: test-dijkstra test-astar-euclidean test-astar-manhattan
 
 .PHONY: clean
 clean:
@@ -68,3 +68,11 @@ get-shortest-path: .build/get-shortest-path.o $(OBJECTS)
 .PHONY: test-dijkstra
 test-dijkstra: ../../test-graphs get-shortest-path test-shortest-path.sh
 	./test-shortest-path.sh $< dijkstra
+
+.PHONY: test-astar-euclidean
+test-astar-euclidean: ../../test-graphs get-shortest-path test-shortest-path.sh
+	./test-shortest-path.sh $< astar-euclidean
+
+.PHONY: test-astar-manhattan
+test-astar-manhattan: ../../test-graphs get-shortest-path test-shortest-path.sh
+	./test-shortest-path.sh $< astar-manhattan
