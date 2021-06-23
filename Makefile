@@ -1,6 +1,3 @@
-PYTHON ?= python3
-
-
 .PHONY: run-backend-server
 run-backend-server: src/backend/waze-server rj_graph_database.json
 	./$<
@@ -13,6 +10,6 @@ test-shortest-path:
 src/backend/waze-server:
 	$(MAKE) -C src/backend/ waze-server
 
-rj_graph_database.json: src/extract_data/create_graph_database.py
-	$(PYTHON) $<
+rj_graph_database.json: src/create_data/create_graph_database.py
+	python3 $<
 	sed -i 's/ //g' $@
