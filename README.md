@@ -44,6 +44,8 @@ Our code is split into three components:
 
 ## How to run
 
+Note that in order for the servers to run, we need both the `8000` and `8080` ports to be free.
+
 Run:
 
 ```sh
