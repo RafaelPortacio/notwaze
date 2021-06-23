@@ -28,7 +28,16 @@ Our code is split into three components:
 - `backend`
   - [`conan`](https://conan.io/) (for automatic C++ dependency management)
 
-    Note that our makefile already runs the necessary `conan` commands for you -- you just need to have it installed.
+    Note that our makefile already runs the necessary `conan` commands for you -- you just need to have it properly installed.
+
+    **Warning:** If you are using GCC, make sure you run the "Important" box in step 5 of [Conan's getting started guide](https://docs.conan.io/en/latest/getting_started.html), which is:
+
+    ```sh
+    conan profile new default --detect  # This will throw a big scary warning, but all it tells you is to run the following command:
+    conan profile update settings.compiler.libcxx=libstdc++11 default
+    ```
+
+    This tells Conan to use the glibc++11 ABI. If you don't do it, then you'll have linking errors.
   - _Other dependencies are automatically managed by conan._
 - `frontend`
   - Python 3 (for launching the web server via `python -m http.server`)
