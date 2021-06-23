@@ -13,7 +13,7 @@ all: $(PROCESSED_HTMLS) $(PROCESSED_CSSS) $(PROCESSED_JSS)
 
 .PHONY: serve
 serve: all
-	cd $(DISTDIR) && python3 -m http.server
+	cd $(DISTDIR) && python3 -m http.server -b 127.0.0.1
 
 $(DISTDIR)/%.html: %.html | $(DISTDIR)
 	cp $< $@
