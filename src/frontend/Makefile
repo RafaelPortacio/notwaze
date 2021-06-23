@@ -22,7 +22,7 @@ $(DISTDIR)/%.css: %.css | $(DISTDIR)
 	cp $< $@
 
 $(DISTDIR)/%.js: %.js | $(DISTDIR)
-	babel $< -o $@
+	cp $< $@
 
 $(DISTDIR):
 	mkdir -p $@

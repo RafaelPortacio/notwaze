@@ -32,7 +32,6 @@ Our code is split into three components:
   - _Other dependencies are automatically managed by conan._
 - `frontend`
   - Python 3 (for launching the web server via `python -m http.server`)
-  - [Babel](https://babeljs.io/) (for compiling modern JS into browser-compatible JS)
 
 ## How to run
 
