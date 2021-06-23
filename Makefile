@@ -1,6 +1,14 @@
-.PHONY: run-backend-server
-run-backend-server: src/backend/waze-server rj_graph_database.json
+.PHONY: serve
+serve:
+	$(MAKE) serve-backend & $(MAKE) serve-frontend
+
+.PHONY: serve-backend
+serve-backend: src/backend/waze-server rj_graph_database.json
 	./$<
+
+.PHONY: serve-frontend
+serve-frontend:
+	$(MAKE) -C src/frontend/ serve
 
 .PHONY: test-shortest-path
 test-shortest-path:
