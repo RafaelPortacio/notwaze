@@ -35,28 +35,12 @@ Our code is split into three components:
 
 ## How to run
 
-First, generate the graph of Rio's streets:
+Run:
 
 ```sh
-python src/create_data/create_graph_database.py
+make
 ```
 
-Then, compile the backend:
+This will, if necessary, generate the street graph, and then serve the backend and the frontend.
 
-```sh
-make -C src/backend
-```
-
-Then, run the backend; this will launch the backend server on `localhost:8080`:
-
-```sh
-src/backend/waze-server
-```
-
-Then, compile and serve the frontend; this will launch the frontend server on `localhost:8000`:
-
-```sh
-make -C src/frontend
-```
-
-Finally, go with your browser to [localhost:8000/](http://localhost:8000/).
+Once that's done, go with your browser to [localhost:8000/](http://localhost:8000/).
