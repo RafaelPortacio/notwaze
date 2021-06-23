@@ -42,16 +42,17 @@ int main() {
                          id_t ending_point_id = graph.lookup_node(ending_point).first;
 
                          std::function<eta_t(const Node&, const Node&)> heuristic;
-                         if (method == "dijkstra")
-                             heuristic = dijkstra_heuristic;
-                         else if (method == "astar-euclidean")
-                             heuristic = euclidean_heuristic;
-                         else if (method == "astar-manhattan")
-                             heuristic = manhattan_heuristic;
-                         else
+
+                         std::optional<std::vector<id_t>> maybe_path;
+                         if (method == "dijkstra") {
+                             maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id);
+                         } else if (method == "astar-euclidean") {
+                             maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, euclidean_heuristic);
+                         } else if (method == "astar-manhattan") {
+                             maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, manhattan_heuristic);
+                         } else {
                              throw std::runtime_error("Bad method");
-                         std::optional<std::vector<id_t>> maybe_path
-                             = shortest_path(graph, starting_point_id, ending_point_id, heuristic);
+                         }
 
                          json out_json;
                          if (maybe_path) {
