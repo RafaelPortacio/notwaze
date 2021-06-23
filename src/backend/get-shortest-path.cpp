@@ -24,11 +24,11 @@ int main(int argc, char* argv[]) {
     // Eval shortest path
     std::optional<std::vector<id_t>> maybe_path;
     if (method == "dijkstra") {
-        maybe_path = shortest_path(graph, starting_point, ending_point, dijkstra_heuristic);
+        maybe_path = shortest_path_dijkstra(graph, starting_point, ending_point);
     } else if (method == "astar-euclidean") {
-        maybe_path = shortest_path(graph, starting_point, ending_point, euclidean_heuristic);
+        maybe_path = shortest_path_astar_euclidean(graph, starting_point, ending_point);
     } else if (method == "astar-manhattan") {
-        maybe_path = shortest_path(graph, starting_point, ending_point, manhattan_heuristic);
+        maybe_path = shortest_path_astar_manhattan(graph, starting_point, ending_point);
     } else {
         std::cerr << "Bad shortest path method: " << method << std::endl;
         return 1;
