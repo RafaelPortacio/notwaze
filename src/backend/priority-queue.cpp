@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 
@@ -10,8 +12,6 @@ class priorityQueue {
     vector<pair<id_t, eta_t>> harr;
 
 public:
-    // Construtor
-    priorityQueue();
 
     int parent(int i) { return (i - 1)/2; }
 
@@ -21,7 +21,7 @@ public:
 
     void push(pair<id_t, eta_t> k);
 
-    pair<pair<id_t, eta_t>, bool> top();
+    pair<id_t, eta_t> top();
 
     void pop();
 
@@ -47,8 +47,8 @@ bool priorityQueue::empty() {
     return harr.empty();
 }
 
-pair<pair<id_t, eta_t>, bool> priorityQueue::top() {
-    return {harr[0], false};
+pair<id_t, eta_t> priorityQueue::top() {
+    return harr[0];
 }
 
 void priorityQueue::pop() {
@@ -77,12 +77,4 @@ void priorityQueue::priorityQueuefy(int i) {
         swap(harr[i], harr[smallest]);
         priorityQueuefy(smallest);
     }
-}
-
-priorityQueue::priorityQueue() {
-    vector<::pair<id_t, eta_t>> harr;
-}
-
-int main () {
-    return 0;
 }
