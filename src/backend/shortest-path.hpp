@@ -7,7 +7,7 @@
 #include <queue>
 
 #include "graph.hpp"
-#include "priority-queue.cpp"
+#include "priority-queue.hpp"
 
 
 // dijkstra

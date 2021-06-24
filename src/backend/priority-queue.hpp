@@ -7,16 +7,15 @@
 
 
 class priorityQueue {
-    
    std::vector<std::pair<id_t, eta_t>> harr;
 
 public:
 
-    int parent(int i) { return (i - 1)/2; }
+    size_t parent(size_t i) { return (i - 1)/2; }
 
-    int l_child(int i) { return (2*i + 1); }
+    size_t l_child(size_t i) { return (2*i + 1); }
 
-    int r_child(int i) { return (2*i + 2); }
+    size_t r_child(size_t i) { return (2*i + 2); }
 
     void push(std::pair<id_t, eta_t> k);
 
@@ -24,7 +23,7 @@ public:
 
     void pop();
 
-    void priorityQueuefy(int i);
+    void priorityQueuefy(size_t i);
 
     bool empty();
 
@@ -33,7 +32,7 @@ public:
 
 void priorityQueue::push(std::pair<id_t, eta_t> k) {
 
-    int i = harr.size();
+    size_t i = harr.size();
     harr[i] = k;
 
     while (i > 0 && harr[parent(i)].second > harr[i].second) {
@@ -60,11 +59,11 @@ void priorityQueue::pop() {
     
 }
 
-void priorityQueue::priorityQueuefy(int i) {
+void priorityQueue::priorityQueuefy(size_t i) {
     
-    int l = priorityQueue::l_child(i);
-    int r = priorityQueue::r_child(i);
-    int smallest = i;
+    size_t l = priorityQueue::l_child(i);
+    size_t r = priorityQueue::r_child(i);
+    size_t smallest = i;
     if (l < harr.size() && harr[l].second < harr[i].second) {
         smallest = l;
     }
