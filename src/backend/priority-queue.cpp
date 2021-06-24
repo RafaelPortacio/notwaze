@@ -5,11 +5,10 @@
 
 #include "graph.hpp"
 
-using namespace std;
 
 class priorityQueue {
     
-    vector<pair<id_t, eta_t>> harr;
+   std::vector<std::pair<id_t, eta_t>> harr;
 
 public:
 
@@ -19,9 +18,9 @@ public:
 
     int r_child(int i) { return (2*i + 2); }
 
-    void push(pair<id_t, eta_t> k);
+    void push(std::pair<id_t, eta_t> k);
 
-    pair<id_t, eta_t> top();
+    std::pair<id_t, eta_t> top();
 
     void pop();
 
@@ -29,10 +28,10 @@ public:
 
     bool empty();
 
-    pair<id_t, eta_t> min() {return harr[0]; }
+    std::pair<id_t, eta_t> min() {return harr[0]; }
 };
 
-void priorityQueue::push(pair<id_t, eta_t> k) {
+void priorityQueue::push(std::pair<id_t, eta_t> k) {
 
     int i = harr.size();
     harr[i] = k;
@@ -47,7 +46,7 @@ bool priorityQueue::empty() {
     return harr.empty();
 }
 
-pair<id_t, eta_t> priorityQueue::top() {
+std::pair<id_t, eta_t> priorityQueue::top() {
     return harr[0];
 }
 
