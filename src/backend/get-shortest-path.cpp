@@ -15,14 +15,14 @@ int main(int argc, char* argv[]) {
 
     std::string method(argv[1]);
     std::string graph_path(argv[2]);
-    id_t starting_point = std::stoi(argv[3]);
-    id_t ending_point = std::stoi(argv[4]);
+    node_id starting_point = std::stoi(argv[3]);
+    node_id ending_point = std::stoi(argv[4]);
 
     // Load graph
     const Graph graph = load_graph_from_json_file(graph_path);
 
     // Eval shortest path
-    std::optional<std::vector<id_t>> maybe_path;
+    std::optional<std::vector<node_id>> maybe_path;
     if (method == "dijkstra") {
         maybe_path = shortest_path_dijkstra(graph, starting_point, ending_point);
     } else if (method == "astar-euclidean") {
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl;
         return 0;
     }
-    const std::vector<id_t>& path = *maybe_path;
+    const std::vector<node_id>& path = *maybe_path;
 
     assert(path.front() == starting_point);
     assert(path.back()  == ending_point);

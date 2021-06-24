@@ -10,26 +10,26 @@
 
 
 // dijkstra
-std::optional<std::vector<id_t>> shortest_path_dijkstra(const Graph& graph, const id_t& start_point, const id_t& end_point) {
+std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph, const node_id& start_point, const node_id& end_point) {
     if (start_point == end_point) {
         return {{start_point}};
     }
 
     struct Compare {
-        bool operator() (const std::pair<id_t, eta_t>& l, const std::pair<id_t, eta_t>& r) {
+        bool operator() (const std::pair<node_id, eta_t>& l, const std::pair<node_id, eta_t>& r) {
             return l.second > r.second;
         }
     };
 
-    std::priority_queue<std::pair<id_t, eta_t>, std::vector<std::pair<id_t, eta_t>>, Compare> frontier;
-    std::unordered_map<id_t, id_t> came_from;
-    std::unordered_map<id_t, eta_t> cost_so_far;
+    std::priority_queue<std::pair<node_id, eta_t>, std::vector<std::pair<node_id, eta_t>>, Compare> frontier;
+    std::unordered_map<node_id, node_id> came_from;
+    std::unordered_map<node_id, eta_t> cost_so_far;
 
     frontier.push({start_point, 0});
     cost_so_far.insert({start_point, 0});
 
     while (!frontier.empty()) {
-        std::pair<id_t, eta_t> current = frontier.top();
+        std::pair<node_id, eta_t> current = frontier.top();
         frontier.pop();
 
         if (current.first == end_point) {
@@ -55,8 +55,8 @@ std::optional<std::vector<id_t>> shortest_path_dijkstra(const Graph& graph, cons
         return std::nullopt;
     }
 
-    std::vector<id_t> path {end_point};
-    id_t current = end_point;
+    std::vector<node_id> path {end_point};
+    node_id current = end_point;
     while (current != start_point) {
         current = came_from.at(current);
         path.push_back(current);
@@ -69,26 +69,26 @@ std::optional<std::vector<id_t>> shortest_path_dijkstra(const Graph& graph, cons
 
 // A star
 template <typename Heuristic>
-std::optional<std::vector<id_t>> shortest_path_astar(const Graph& graph, const id_t& start_point, const id_t& end_point, Heuristic heuristic) {
+std::optional<std::vector<node_id>> shortest_path_astar(const Graph& graph, const node_id& start_point, const node_id& end_point, Heuristic heuristic) {
     if (start_point == end_point) {
         return {{start_point}};
     }
 
     struct Compare {
-        bool operator() (const std::pair<id_t, eta_t>& l, const std::pair<id_t, eta_t>& r) {
+        bool operator() (const std::pair<node_id, eta_t>& l, const std::pair<node_id, eta_t>& r) {
             return l.second > r.second;
         }
     };
 
-    std::priority_queue<std::pair<id_t, eta_t>, std::vector<std::pair<id_t, eta_t>>, Compare> frontier;
-    std::unordered_map<id_t, id_t> came_from;
-    std::unordered_map<id_t, eta_t> cost_so_far;
+    std::priority_queue<std::pair<node_id, eta_t>, std::vector<std::pair<node_id, eta_t>>, Compare> frontier;
+    std::unordered_map<node_id, node_id> came_from;
+    std::unordered_map<node_id, eta_t> cost_so_far;
 
     frontier.push({start_point, 0});
     cost_so_far.insert({start_point, 0});
 
     while (!frontier.empty()) {
-        std::pair<id_t, eta_t> current = frontier.top();
+        std::pair<node_id, eta_t> current = frontier.top();
         frontier.pop();
 
         if (current.first == end_point) {
@@ -114,8 +114,8 @@ std::optional<std::vector<id_t>> shortest_path_astar(const Graph& graph, const i
         return std::nullopt;
     }
 
-    std::vector<id_t> path {end_point};
-    id_t current = end_point;
+    std::vector<node_id> path {end_point};
+    node_id current = end_point;
     while (current != start_point) {
         current = came_from.at(current);
         path.push_back(current);
