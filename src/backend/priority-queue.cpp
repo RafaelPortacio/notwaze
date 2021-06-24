@@ -3,12 +3,6 @@
 
 using namespace std;
 
-void replacement(pair<id_t, eta_t>* x, pair<id_t, eta_t>* y) {
-    pair<id_t, eta_t> temp = *x;
-    *x = *y;
-    *y = temp;
-}
-
 struct Compare {
     bool operator() (const pair<id_t, eta_t>& l, const pair<id_t, eta_t>& r) {
         return l.second < r.second;
@@ -16,13 +10,11 @@ struct Compare {
 
 class priorityQueue {
     
-    vector<pair<id_t, eta_t>>* harr;
-    int capacity;
-    int priority_size;
+    vector<pair<id_t, eta_t>> harr;
 
 public:
     // Construtor
-    priorityQueue(int capacity);
+    priorityQueue();
 
     int parent(int i) { return (i - 1)/2; }
 
@@ -38,40 +30,30 @@ public:
 
     void priorityQueuefy(int i);
 
+    bool empty(int i) { harr.empty() };
+
     pair<id_t, eta_t> min() {return harr[0]; }
 };
 
 void priorityQueue::push(pair<id_t, eta_t> k) {
 
-    if (priority_size >= capacity) {
-        cout << "\nDeu ruim: espaço de memoria excedido\n";
-        return;
-    }
-
-    int i = priority_size;
-    priority_size++;
-    harr[i] = std::pair<id_t, eta_t>;
+    int i = harr.size;
+    harr[i] = k;
 
     while (i > 0 && harr[parent(i)] > harr[i]) {
-        replacement(&harr[i], &harr[parent(i)]);
+        std::swap(&harr[i], &harr[parent(i)]);
         i = parent(i);
     }
 }
 
 pair<pair<id_t, eta_t>, bool> priorityQueue::top() {
-    // if (priority_size <= 0) {
-    //     return {pair<0, 0>, true};
-    // }
-
     return {harr[0], false};
 }
 
 void priorityQueue::pop() {
-
     if (!(this->priorityQueue::top()).second) {
 
-        harr[0] = harr[priority_size - 1];
-        priority_size--;
+        harr[0] = harr[harr.size - 1];
         priorityQueuefy(0);
 
     }
@@ -83,10 +65,10 @@ void priorityQueue::priorityQueuefy(int i) {
     int l = priorityQueue::l_child(i);
     int r = priorityQueue::r_child(i);
     int smallest = i;
-    if (l < priority_size && Compare(harr[l], harr[i])) {
+    if (l < harr.size && Compare(harr[l], harr[i])) {
         smallest = l;
     }
-    if (r < priority_size && Compare(harr[r], harr[smallest])) {
+    if (r < harr.size && Compare(harr[r], harr[smallest])) {
         smallest = r;
     }
 
@@ -96,8 +78,6 @@ void priorityQueue::priorityQueuefy(int i) {
     }
 }
 
-priorityQueue::priorityQueue(int cap) {
-    priority_size = 0;
-    capacity = cap;
-    harr = new pair<id_t, eta_t>[cap];
+priorityQueue::priorityQueue() {
+    vector<::pair<id_t, eta_t>> harr;
 }
