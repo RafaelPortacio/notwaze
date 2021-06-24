@@ -1,12 +1,9 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+#include "graph.hpp"
 
-struct Compare {
-    bool operator() (const pair<id_t, eta_t>& l, const pair<id_t, eta_t>& r) {
-        return l.second < r.second;
-    }
+using namespace std;
 
 class priorityQueue {
     
@@ -30,20 +27,24 @@ public:
 
     void priorityQueuefy(int i);
 
-    bool empty(int i) { harr.empty() };
+    bool empty();
 
     pair<id_t, eta_t> min() {return harr[0]; }
 };
 
 void priorityQueue::push(pair<id_t, eta_t> k) {
 
-    int i = harr.size;
+    int i = harr.size();
     harr[i] = k;
 
-    while (i > 0 && harr[parent(i)] > harr[i]) {
-        std::swap(&harr[i], &harr[parent(i)]);
+    while (i > 0 && harr[parent(i)].second > harr[i].second) {
+        swap(harr[i], harr[parent(i)]);
         i = parent(i);
     }
+}
+
+bool priorityQueue::empty() {
+    return harr.empty();
 }
 
 pair<pair<id_t, eta_t>, bool> priorityQueue::top() {
@@ -53,7 +54,7 @@ pair<pair<id_t, eta_t>, bool> priorityQueue::top() {
 void priorityQueue::pop() {
     if (!(this->priorityQueue::top()).second) {
 
-        harr[0] = harr[harr.size - 1];
+        harr[0] = harr[harr.size() - 1];
         priorityQueuefy(0);
 
     }
@@ -65,19 +66,23 @@ void priorityQueue::priorityQueuefy(int i) {
     int l = priorityQueue::l_child(i);
     int r = priorityQueue::r_child(i);
     int smallest = i;
-    if (l < harr.size && Compare(harr[l], harr[i])) {
+    if (l < harr.size() && harr[l].second < harr[i].second) {
         smallest = l;
     }
-    if (r < harr.size && Compare(harr[r], harr[smallest])) {
+    if (r < harr.size() && harr[r].second < harr[smallest].second) {
         smallest = r;
     }
 
     if (smallest != i) {
-        replacement(&harr[i], &harr[smallest]);
+        swap(harr[i], harr[smallest]);
         priorityQueuefy(smallest);
     }
 }
 
 priorityQueue::priorityQueue() {
     vector<::pair<id_t, eta_t>> harr;
+}
+
+int main () {
+    return 0;
 }
