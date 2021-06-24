@@ -12,7 +12,7 @@ using node_id = unsigned long int; // we could use size_t, but unsigned int seem
                            	       // memory we might need.
 
 using eta_t = double; // in minutes
-using leng_t = double; // in meters
+using length_t = double; // in meters
 
 struct Node {
     double latitude;
@@ -73,7 +73,7 @@ struct Node {
 
 struct Edge {
     eta_t eta;
-    leng_t leng;
+    length_t length;
 };
 
 class Graph {
