@@ -8,8 +8,8 @@
 
 
 using node_id = unsigned long int; // we could use size_t, but unsigned int seems to be
-                           		   // enough for us, and using it will save us plenty of
-                           		   // memory we might need.
+                           	       // enough for us, and using it will save us plenty of
+                           	       // memory we might need.
 
 using eta_t = double; // in minutes
 using leng_t = double; // in meters
