@@ -7,9 +7,9 @@
 #include <algorithm>
 
 
-using id_t = unsigned int; // we could use size_t, but unsigned int seems to be
-                           // enough for us, and using it will save us plenty of
-                           // memory we might need.
+using node_id = unsigned long int; // we could use size_t, but unsigned int seems to be
+                           		// enough for us, and using it will save us plenty of
+                           		// memory we might need.
 
 using eta_t = double; // in minutes
 using leng_t = double; // in meters
@@ -78,21 +78,21 @@ struct Edge {
 
 class Graph {
     private:
-        std::unordered_map<id_t, Node> _nodes;
-        std::unordered_map<id_t, std::vector<std::pair<id_t, Edge>>> _edges;
+        std::unordered_map<node_id, Node> _nodes;
+        std::unordered_map<node_id, std::vector<std::pair<node_id, Edge>>> _edges;
 
     public:
         Graph() = default;
 
-        const Node& operator[](const id_t& node_id) const {
+        const Node& operator[](const node_id& node_id) const {
             assert(_nodes.count(node_id));
             return _nodes.at(node_id);
         }
 
-        void add_node(const id_t& id, const Node& node) {
+        void add_node(const node_id& id, const Node& node) {
             _nodes.insert({id, node});
         }
-        void add_edge(const id_t& start_point, const id_t& end_point, const Edge& edge) {
+        void add_edge(const node_id& start_point, const node_id& end_point, const Edge& edge) {
             if (!_edges.count(start_point))
                 _edges.insert({start_point, {}});
             _edges[start_point].push_back({end_point, edge});
@@ -119,23 +119,23 @@ class Graph {
         decltype(_edges)::const_iterator cbegin_edges() const { return _edges.cbegin(); }
         decltype(_edges)::const_iterator   cend_edges() const { return _edges.  cend(); }
 
-        std::vector<std::pair<id_t, Edge>>::const_iterator cbegin_outedges(id_t origin_node) const {
+        std::vector<std::pair<node_id, Edge>>::const_iterator cbegin_outedges(node_id origin_node) const {
             assert(_edges.count(origin_node));
             return _edges.at(origin_node).cbegin();
         }
-        std::vector<std::pair<id_t, Edge>>::const_iterator cend_outedges(id_t origin_node) const {
+        std::vector<std::pair<node_id, Edge>>::const_iterator cend_outedges(node_id origin_node) const {
             assert(_edges.count(origin_node));
             return _edges.at(origin_node).cend();
         }
 
-        const Edge& get_edge(id_t origin_node, id_t destination_node) const {
+        const Edge& get_edge(node_id origin_node, node_id destination_node) const {
             return std::find_if(cbegin_outedges(origin_node), cend_outedges(origin_node),
                                 [destination_node](const auto& x) {
                                     return x.first == destination_node;
                                 })->second;
         }
 
-        std::pair<id_t, const Node&> lookup_node(const Node& query_node) const {
+        std::pair<node_id, const Node&> lookup_node(const Node& query_node) const {
             // TODO: we'll probably want to use a k-D tree here
             return *std::min_element(cbegin_nodes(), cend_nodes(),
                                      [&query_node](const auto& l, const auto& r) {

@@ -38,12 +38,12 @@ int main() {
                          };
                          std::string method = (std::string)qp["method"];
 
-                         id_t starting_point_id = graph.lookup_node(starting_point).first;
-                         id_t ending_point_id = graph.lookup_node(ending_point).first;
+                         node_id starting_point_id = graph.lookup_node(starting_point).first;
+                         node_id ending_point_id = graph.lookup_node(ending_point).first;
 
                          std::function<eta_t(const Node&, const Node&)> heuristic;
 
-                         std::optional<std::vector<id_t>> maybe_path;
+                         std::optional<std::vector<node_id>> maybe_path;
                          if (method == "dijkstra") {
                              maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id);
                          } else if (method == "astar-euclidean") {
@@ -56,10 +56,10 @@ int main() {
 
                          json out_json;
                          if (maybe_path) {
-                             std::vector<id_t> path = *maybe_path;
+                             std::vector<node_id> path = *maybe_path;
                              std::vector<json> path_latlongs(path.size());
                              std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs),
-                                            [&graph](id_t node_id) {
+                                            [&graph](node_id node_id) {
                                                 const Node& node = graph[node_id];
                                                 return json {
                                                     {"latitude", node.latitude},
