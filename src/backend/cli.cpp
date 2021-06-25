@@ -1,5 +1,6 @@
 #include <iostream>
 #include <functional>
+#include <math.h>
 
 #include "graph.hpp"
 #include "io.hpp"
@@ -29,8 +30,6 @@ int main() {
         std::cin >> algoritm;
     }
 
-    std::cout << "Foda-se!" << std::endl;
-
     std::cout << "Enter the origin: ";
     std::cin >> starting_point_str_x;
     std::cin >> starting_point_str_y;
@@ -49,7 +48,9 @@ int main() {
     long double ending_point_y = std::stold(ending_point_str_y);
 
 
-    std::cout << starting_point_x + starting_point_y << std::endl;
+    std::cout << "distancia: " << pow(pow(ending_point_x - starting_point_x, 2.0) + pow(ending_point_y - starting_point_y, 2.0), 0.5) << std::endl;
+
+
 
     // node_id starting_point = std::stoi(starting_point_str);
     // node_id ending_point = std::stoi(ending_point_str);
