@@ -28,9 +28,11 @@ for i in G.edges:
     origin_node = str(i[0])
     destination_node = str(i[1])
     eta = dict_aux['travel_time']
+    leng = dict_aux['length']
     edges.append({'origin_node': origin_node,
                   'destination_node': destination_node,
-                  'eta': eta})
+                  'eta': eta,
+                  'length': leng})
 
 #create dictionary for json
 json_dictio = {}
