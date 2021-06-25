@@ -17,13 +17,6 @@ int main() {
     std::cout << "Loaded the graph." << std::endl;
 
     auto router = std::make_unique<restinio::router::express_router_t<>>();
-    router->http_get("/sayHello",
-                     [](const auto& req, const auto& params) {
-                         const auto qp = restinio::parse_query(req->header().query());
-                         return req->create_response()
-                             .set_body("Hello, " + (std::string)qp["name"] + "!")
-                             .done();
-                     });
     router->http_get("/shortestPath",
                      [&graph](const auto& req, const auto& params) {
                          const auto qp = restinio::parse_query(req->header().query());
