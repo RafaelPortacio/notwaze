@@ -70,7 +70,7 @@ struct Node {
         }
     }
 	
-    friend std::pair<bool, std::pair<double, double>> projection(const Node& s1,
+    friend std::pair<bool, Node> projection(const Node& s1,
                                                 const Node& s2,
                                                 const Node& p) {
         
@@ -99,14 +99,16 @@ struct Node {
         vec_s1_to_s2.second = s2.longitude - s1.longitude;
         
         if (pair_dot_prod(vec_s1_to_p, vec_s1_to_s2) < 0){
-            return {true, {s1.latitude, s1.longitude}};
+            return {true, Node {.latitude = s1.latitude,
+                                .longitude = s1.longitude}};
         }else if(-pair_dot_prod(vec_s2_to_p, vec_s1_to_s2) < 0){
-            return {true, {s1.latitude,s1.longitude}};
+            return {true, Node {.latitude = s2.latitude,
+                                .longitude = s2.longitude}};
         }else{
-            proj = (std::abs(pair_dot_prod(vec_s1_to_p, vec_s1_to_s2))/
+            double proj = (std::abs(pair_dot_prod(vec_s1_to_p, vec_s1_to_s2))/
                    euclidean_distance(s1, s2));
-			return {false, {s1.latitude + proj*vec_s1_to_s2.first,
-					s1.longitude + proj*vec_s1_to_s2.second}}
+			return {false, Node {.latitude = s1.latitude + proj*vec_s1_to_s2.first,
+					        .longitude = s1.longitude + proj*vec_s1_to_s2.second}};
         }
     }
 };
