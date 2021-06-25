@@ -3,9 +3,14 @@
 /* Light theme: */
 :root {
     --background: #FFFFFF;
+
+    --normal-text: #000000;
+    --high-text: #000000;
+
+    --surface: #EFEFEF;
+    --surface-hover: #DDDDDD;
+
     --primary: #6200EE;
-    --primary-alt: #3700B3;
-    --secondary: #03DAC6;
 }
 
 /* Dark theme: */
@@ -15,14 +20,11 @@
 
         --normal-text: rgba(255, 255, 255, 0.6);
         --high-text: rgba(255, 255, 255, 0.87);
-        --dim-text: rgba(255, 255, 255, 0.38);
 
         --surface: #121212;
         --surface-hover: #383838;
 
         --primary: #BB86FC;
-        --primary-alt: #3700B3;
-        --secondary: #03DAC6;
     }
 }
 
