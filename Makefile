@@ -18,6 +18,6 @@ test-shortest-path:
 src/backend/waze-server:
 	$(MAKE) -C src/backend/ waze-server
 
-rj_graph_database.json: # src/create_data/create_graph_database.py
-	python3 $<
+rj_graph_database.json:
+	python3 src/create_data/create_graph_database.py
 	sed -i 's/ //g' $@
