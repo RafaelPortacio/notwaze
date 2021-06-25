@@ -3,6 +3,7 @@
 src/frontend/dist/
 waze-server
 get-shortest-path
+benchmark
 
 # Conan stuff:
 conan.lock
@@ -13,3 +14,4 @@ graph_info.json
 
 # Our generated files
 rj_graph_database.json
+*.csv

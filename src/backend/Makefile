@@ -14,7 +14,7 @@ CPPFLAGS += -std=c++17
 CFLAGS += -Wall
 
 # Recipe-related Variables
-MAINS = server.cpp get-shortest-path.cpp
+MAINS = server.cpp get-shortest-path.cpp benchmark.cpp
 SOURCES = $(filter-out $(MAINS), $(wildcard *.cpp))
 HEADERS = $(wildcard *.hpp)
 OBJECTS = $(patsubst %.cpp, .build/%.o, $(SOURCES))
@@ -41,6 +41,9 @@ serve:
 .PHONY: test
 test: test-dijkstra test-astar-euclidean test-astar-manhattan
 
+.PHONY: bench
+bench: bench-dijkstra.csv bench-astar-euclidean.csv bench-astar-manhattan.csv
+
 .PHONY: clean
 clean:
 	rm -f waze-server
@@ -51,6 +54,9 @@ waze-server: .build/server.o $(OBJECTS)
 	$(CXX) -g -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 get-shortest-path: .build/get-shortest-path.o $(OBJECTS)
+	$(CXX) -g -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
+
+benchmark: .build/benchmark.o $(OBJECTS)
 	$(CXX) -g -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 .build/%.o: %.cpp $(HEADERS) | .build/
@@ -76,3 +82,15 @@ test-astar-euclidean: ../../test-graphs get-shortest-path test-shortest-path.sh
 .PHONY: test-astar-manhattan
 test-astar-manhattan: ../../test-graphs get-shortest-path test-shortest-path.sh
 	./test-shortest-path.sh $< astar-manhattan
+
+.PHONY: bench-dijkstra
+bench-dijkstra.csv: ../../rj_graph_database.json benchmark
+	./benchmark dijkstra $< $@
+
+.PHONY: bench-astar-euclidean
+bench-astar-euclidean.csv: ../../rj_graph_database.json benchmark
+	./benchmark astar-euclidean $< $@
+
+.PHONY: bench-astar-manhattan
+bench-astar-manhattan.csv: ../../rj_graph_database.json benchmark
+	./benchmark astar-manhattan $< $@
