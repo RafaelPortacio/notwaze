@@ -17,9 +17,15 @@ std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph, c
         return {{start_point}};
     }
 
-    priorityQueue frontier;
-    std::unordered_map<id_t, id_t> came_from;
-    std::unordered_map<id_t, weight_t> cost_so_far;
+    struct Compare {
+        bool operator() (const std::pair<node_id, weight_t>& l, const std::pair<node_id, weight_t>& r) {
+            return l.second < r.second;
+        }
+    };
+
+    PriorityQueue<std::pair<node_id, weight_t>, Compare> frontier;
+    std::unordered_map<node_id, node_id> came_from;
+    std::unordered_map<node_id, weight_t> cost_so_far;
 
     frontier.push({start_point, 0});
     cost_so_far.insert({start_point, 0});

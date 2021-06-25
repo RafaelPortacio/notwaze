@@ -6,73 +6,51 @@
 #include "graph.hpp"
 
 
-class priorityQueue {
-   std::vector<std::pair<id_t, weight_t>> harr;
+template <typename T, typename Compare>
+class PriorityQueue {
+    public:
+        void priority_queuefy(size_t i) {
+            size_t l = l_child(i);
+            size_t r = r_child(i);
+            size_t smallest = i;
+            if (l < data.size() && compare(data[l], data[smallest]))
+                smallest = l;
+            if (r < data.size() && compare(data[r], data[smallest]))
+                smallest = r;
 
-public:
+            if (smallest != i) {
+                std::swap(data[i], data[smallest]);
+                priority_queuefy(smallest);
+            }
+        }
 
-    size_t parent(size_t i) { return (i - 1)/2; }
+        [[nodiscard]] size_t size() const {
+            return data.size();
+        }
+        [[nodiscard]] std::pair<id_t, weight_t> top() const {
+            return data.front();
+        }
+        [[nodiscard]] bool empty() const {
+            return data.empty();
+        }
 
-    size_t l_child(size_t i) { return (2*i + 1); }
+        void push(const std::pair<id_t, weight_t>& k) {
+            data.push_back(k);
 
-    size_t r_child(size_t i) { return (2*i + 2); }
+            for (size_t i = data.size() - 1; i > 0 && compare(data[i], data[parent(i)]); i = parent(i))
+                swap(data[i], data[parent(i)]);
+        }
+        void pop() {
+            data.front() = data.back();
+            data.pop_back();
+            priority_queuefy(0);
+        }
 
-    void push(std::pair<id_t, weight_t> k);
+    private:
+        static size_t parent(size_t i) { return ((i+1) >> 1) - 1; }
+        static size_t l_child(size_t i) { return ((i+1) << 1) - 1; }
+        static size_t r_child(size_t i) { return ((i+1) << 1); }
 
-    std::pair<id_t, weight_t> top();
-
-    void pop();
-
-    void priorityQueuefy(size_t i);
-
-    bool empty();
-
-    std::pair<id_t, weight_t> min() {return harr[0]; }
+        std::vector<T> data;
+        Compare compare;
 };
-
-void priorityQueue::push(std::pair<id_t, weight_t> k) {
-
-    size_t i = harr.size();
-    harr[i] = k;
-
-    while (i > 0 && harr[parent(i)].second > harr[i].second) {
-        swap(harr[i], harr[parent(i)]);
-        i = parent(i);
-    }
-}
-
-bool priorityQueue::empty() {
-    return harr.empty();
-}
-
-std::pair<id_t, weight_t> priorityQueue::top() {
-    return harr[0];
-}
-
-void priorityQueue::pop() {
-    if (!(this->priorityQueue::top()).second) {
-
-        harr[0] = harr[harr.size() - 1];
-        priorityQueuefy(0);
-
-    }
-    
-}
-
-void priorityQueue::priorityQueuefy(size_t i) {
-    
-    size_t l = priorityQueue::l_child(i);
-    size_t r = priorityQueue::r_child(i);
-    size_t smallest = i;
-    if (l < harr.size() && harr[l].second < harr[i].second) {
-        smallest = l;
-    }
-    if (r < harr.size() && harr[r].second < harr[smallest].second) {
-        smallest = r;
-    }
-
-    if (smallest != i) {
-        swap(harr[i], harr[smallest]);
-        priorityQueuefy(smallest);
-    }
-}
