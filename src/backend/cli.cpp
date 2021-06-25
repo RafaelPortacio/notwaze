@@ -1,6 +1,7 @@
 #include <iostream>
 #include <functional>
 #include <math.h>
+#include <time.h>
 
 #include "graph.hpp"
 #include "io.hpp"
@@ -21,6 +22,7 @@ int main() {
     // Load graph
     const Graph graph = load_graph_from_json_file("rj_graph_database.json");
 
+    // Algoritm
     std::cout << ", pronto!" << std::endl;
     std::cout << "Which algoritm to use?" << std::endl;
     while (algoritm != 0 && algoritm != 1 && algoritm != 2) {
@@ -30,6 +32,8 @@ int main() {
         std::cin >> algoritm;
     }
 
+
+    // Starting point and ending point
     std::cout << "Enter the origin: ";
     std::cin >> starting_point_str_x;
     std::cin >> starting_point_str_y;
@@ -47,51 +51,33 @@ int main() {
     long double ending_point_x = std::stold(ending_point_str_x);
     long double ending_point_y = std::stold(ending_point_str_y);
 
+    // Shortest path
 
-    std::cout << "distancia: " << pow(pow(ending_point_x - starting_point_x, 2.0) + pow(ending_point_y - starting_point_y, 2.0), 0.5) << std::endl;
+    double start_time;
+    double end_time;
+    double time;
 
+    start_time = clock();
 
+    double distance = pow(pow(ending_point_x - starting_point_x, 2.0) + pow(ending_point_y - starting_point_y, 2.0), 0.5);
 
-    // node_id starting_point = std::stoi(starting_point_str);
-    // node_id ending_point = std::stoi(ending_point_str);
+    end_time = clock();
+
+    time = (end_time - start_time) * 1000.0 / CLOCKS_PER_SEC;
+
+    // Print shortest path
+    if (algoritm == 0) {
+        std::cout << "The shortest path using Dijkstra is ";
+    } else if (algoritm == 1) {
+        std::cout << "The shortest path using A star with euclidean heuristic is ";
+    } else {
+        std::cout << "The shortest path using A star with manhattan heuristic is ";
+    };
+
+    std::cout << distance;
+    std::cout << " meters (";
+    std::cout << time;
+    std::cout << " seconds)" << std::endl;
 
     return 0;
-
-    // if (argc != 4) {
-    //     std::cerr << "Usage: " << argv[0] << " <METHOD> <START_NODE> <END_NODE>" << std::endl;
-    //     return 2;
-    // }
-
-    // std::string method(argv[1]);
-    // std::string graph_path(argv[2]);
-    // node_id starting_point = std::stoi(argv[3]);
-    // node_id ending_point = std::stoi(argv[4]);
-
-
-    // // Eval shortest path
-    // std::optional<std::vector<node_id>> maybe_path;
-    // if (method == "dijkstra") {
-    //     maybe_path = shortest_path_dijkstra(graph, starting_point, ending_point, get_weight_length);
-    // } else if (method == "astar-euclidean") {
-    //     maybe_path = shortest_path_astar(graph, starting_point, ending_point, euclidean_heuristic, get_weight_length);
-    // } else if (method == "astar-manhattan") {
-    //     maybe_path = shortest_path_astar(graph, starting_point, ending_point, manhattan_heuristic, get_weight_length);
-    // } else {
-    //     std::cerr << "Bad shortest path method: " << method << std::endl;
-    //     return 1;
-    // }
-
-    // if (!maybe_path) {
-    //     std::cout << std::endl;
-    //     return 0;
-    // }
-    // const std::vector<node_id>& path = *maybe_path;
-
-    // assert(path.front() == starting_point);
-    // assert(path.back()  == ending_point);
-
-    // for (const auto& node_id : path) {
-    //     std::cout << node_id << " ";
-    // }
-    // std::cout << std::endl;
 }
