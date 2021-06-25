@@ -27,20 +27,22 @@ class PriorityQueue {
         [[nodiscard]] size_t size() const {
             return data.size();
         }
-        [[nodiscard]] std::pair<id_t, weight_t> top() const {
+        [[nodiscard]] T top() const {
+            assert(!empty());
             return data.front();
         }
         [[nodiscard]] bool empty() const {
             return data.empty();
         }
 
-        void push(const std::pair<id_t, weight_t>& k) {
+        void push(const T& k) {
             data.push_back(k);
 
             for (size_t i = data.size() - 1; i > 0 && compare(data[i], data[parent(i)]); i = parent(i))
                 swap(data[i], data[parent(i)]);
         }
         void pop() {
+            assert(!empty());
             data.front() = data.back();
             data.pop_back();
             priority_queuefy(0);
