@@ -1,5 +1,6 @@
 #include <iostream>
 #include <functional>
+#include <chrono>
 
 #include <restinio/all.hpp>
 #include <nlohmann/json.hpp>
@@ -37,6 +38,7 @@ int main() {
                          std::function<weight_t(const Node&, const Node&)> heuristic;
 
                          std::optional<std::vector<node_id>> maybe_path;
+                         auto start_time = std::chrono::high_resolution_clock::now();
                          if (method == "dijkstra") {
                              maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id, get_weight_length);
                          } else if (method == "astar-euclidean") {
@@ -46,6 +48,7 @@ int main() {
                          } else {
                              throw std::runtime_error("Bad method");
                          }
+                         auto end_time = std::chrono::high_resolution_clock::now();
 
                          json out_json;
                          if (maybe_path) {
@@ -68,6 +71,7 @@ int main() {
                                  {"shortest-paths", json::array({
                                      json::object({
                                          {"eta", eta},
+                                         {"compute_time", std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count()},
                                          {"path", path_latlongs},
                                      })
                                  })}
