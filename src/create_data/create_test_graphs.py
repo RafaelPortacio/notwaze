@@ -31,7 +31,8 @@ for rep in trange(100):
         destination_node = i[1]
         edges.append({'origin_node': str(origin_node),
                       'destination_node': str(destination_node),
-                      'eta': G.edges[origin_node, destination_node]['weight']})
+                      'eta': G.edges[origin_node, destination_node]['weight'],
+                      'length': G.edges[origin_node, destination_node]['weight'] * 0.1})
 
     #create dictionary for json
     json_dictio = {}
