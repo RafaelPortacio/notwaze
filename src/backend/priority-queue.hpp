@@ -7,7 +7,7 @@
 
 
 class priorityQueue {
-   std::vector<std::pair<id_t, eta_t>> harr;
+   std::vector<std::pair<id_t, weight_t>> harr;
 
 public:
 
@@ -17,9 +17,9 @@ public:
 
     size_t r_child(size_t i) { return (2*i + 2); }
 
-    void push(std::pair<id_t, eta_t> k);
+    void push(std::pair<id_t, weight_t> k);
 
-    std::pair<id_t, eta_t> top();
+    std::pair<id_t, weight_t> top();
 
     void pop();
 
@@ -27,10 +27,10 @@ public:
 
     bool empty();
 
-    std::pair<id_t, eta_t> min() {return harr[0]; }
+    std::pair<id_t, weight_t> min() {return harr[0]; }
 };
 
-void priorityQueue::push(std::pair<id_t, eta_t> k) {
+void priorityQueue::push(std::pair<id_t, weight_t> k) {
 
     size_t i = harr.size();
     harr[i] = k;
@@ -45,7 +45,7 @@ bool priorityQueue::empty() {
     return harr.empty();
 }
 
-std::pair<id_t, eta_t> priorityQueue::top() {
+std::pair<id_t, weight_t> priorityQueue::top() {
     return harr[0];
 }
 

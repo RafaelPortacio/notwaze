@@ -38,18 +38,18 @@ int main() {
                          };
                          std::string method = (std::string)qp["method"];
 
-                         node_id starting_point_id = graph.lookup_node(starting_point).first;
-                         node_id ending_point_id = graph.lookup_node(ending_point).first;
+                         node_id starting_point_id = graph.lookup_nodes(starting_point).second;
+                         node_id ending_point_id = graph.lookup_nodes(ending_point).first;
 
-                         std::function<eta_t(const Node&, const Node&)> heuristic;
+                         std::function<weight_t(const Node&, const Node&)> heuristic;
 
                          std::optional<std::vector<node_id>> maybe_path;
                          if (method == "dijkstra") {
-                             maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id);
+                             maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id, get_weight_length);
                          } else if (method == "astar-euclidean") {
-                             maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, euclidean_heuristic);
+                             maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, euclidean_heuristic, get_weight_length);
                          } else if (method == "astar-manhattan") {
-                             maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, manhattan_heuristic);
+                             maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, manhattan_heuristic, get_weight_length);
                          } else {
                              throw std::runtime_error("Bad method");
                          }
@@ -66,7 +66,7 @@ int main() {
                                                     {"longitude", node.longitude}
                                                 };
                                             });
-                             eta_t eta = 0;
+                             weight_t eta = 0;
                              for (size_t i = 0; i < path.size()-1; ++i) {
                                  eta += graph.get_edge(path[i], path[i+1]).eta;
                              }
