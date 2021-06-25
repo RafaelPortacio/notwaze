@@ -71,7 +71,7 @@ int main() {
                                  {"shortest-paths", json::array({
                                      json::object({
                                          {"eta", eta},
-                                         {"compute_time", std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count()},
+                                         {"compute-time", std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count()},
                                          {"path", path_latlongs},
                                      })
                                  })}

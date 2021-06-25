@@ -99,7 +99,7 @@ async function find_and_draw_path(starting_point, destination) {
             color: "blue",
             weight: 7,
             opacity: 0.5,
-        }).addTo(leaflet_map).bindPopup("ETA: " + humanizeDuration(1000 * Math.round(path["eta"])), {
+        }).addTo(leaflet_map).bindPopup("<p>ETA: " + humanizeDuration(1000 * Math.round(path["eta"])) + "</p><p>Time to compute: " + humanizeDuration(Math.round(path["compute-time"])) + "</p>", {
             autoPan: false,
             closeButton: false,
         });
