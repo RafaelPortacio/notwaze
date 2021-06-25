@@ -134,13 +134,48 @@ class Graph {
                                     return x.first == destination_node;
                                 })->second;
         }
+		
+		const Node& get_node(node_id the_node_id) const {
+			return _nodes.at(the_node_id);
+		}
 
-        std::pair<node_id, const Node&> lookup_node(const Node& query_node) const {
+        std::pair<node_id, node_id> lookup_nodes(const Node& query_node) const {
             // TODO: we'll probably want to use a k-D tree here
-            return *std::min_element(cbegin_nodes(), cend_nodes(),
+			
+
+			
+			double min_dist_to_segment = INFINITY;
+			node_id min_origin;
+			node_id min_receiver;
+			for(auto it = cbegin_edges(); it != cend_edges(); ++it){
+				node_id origin = it->first;
+				auto& edges_from = it->second;
+				for(auto it2 = edges_from.cbegin(); it2 != edges_from.cend(); ++it){
+					node_id receiver = it2->first;
+					double dist_to_segment = distance_to_segment(get_node(origin),
+																 get_node(receiver),
+																 query_node);
+					if(dist_to_segment < min_dist_to_segment) {
+						min_dist_to_segment = dist_to_segment;
+			            min_origin = origin;
+			            min_receiver = receiver;
+					}
+				}
+			}
+			
+			return std::pair(min_origin, min_receiver);
+		}
+            /*origin_of_edge = *std::min_element(cbegin_edges(), cend_edges(),
                                      [&query_node](const auto& l, const auto& r) {
-                                         return squared_euclidean_distance(query_node, l.second)
-                                             <  squared_euclidean_distance(query_node, r.second);
-                                     });
-        }
+										 std::min_element(l.second.begin(), l.second.end(), 
+									     [&query_node](const auto& l1, const auto& r1) { return
+										 distance_to_segment(_nodes[l.first], _nodes[l1.first], query_node) <
+										 distance_to_segment(_nodes[l.first], _nodes[r1.first], query_node)})
+                                         < 
+										 std::min_element(r.second.begin(), r.second.end(), 
+									     [&query_node](const auto& l2, const auto& r2) {
+										 distance_to_segment(_nodes[r.first], _nodes[l2.first], query_node) <
+										 distance_to_segment(_nodes[r.first], _nodes[r2.first], query_node)})});
+			
+			return std::pair(origin_of_edge.first, min_element()}); */
 };

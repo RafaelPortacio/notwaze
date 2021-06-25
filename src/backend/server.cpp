@@ -38,8 +38,8 @@ int main() {
                          };
                          std::string method = (std::string)qp["method"];
 
-                         node_id starting_point_id = graph.lookup_node(starting_point).first;
-                         node_id ending_point_id = graph.lookup_node(ending_point).first;
+                         node_id starting_point_id = graph.lookup_nodes(starting_point).second;
+                         node_id ending_point_id = graph.lookup_nodes(ending_point).first;
 
                          std::function<eta_t(const Node&, const Node&)> heuristic;
 
