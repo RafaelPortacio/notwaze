@@ -11,8 +11,7 @@ using node_id = unsigned long int; // we could use size_t, but unsigned int seem
                            	       // enough for us, and using it will save us plenty of
                            	       // memory we might need.
 
-using eta_t = double; // in minutes
-using length_t = double; // in meters
+using weight_t = double; // in minutes or meters
 
 struct Node {
     double latitude;
@@ -114,8 +113,8 @@ struct Node {
 };
 
 struct Edge {
-    eta_t eta;
-    length_t length;
+    weight_t eta;
+    weight_t length;
 };
 
 class Graph {
@@ -184,15 +183,13 @@ class Graph {
         std::pair<node_id, node_id> lookup_nodes(const Node& query_node) const {
             // TODO: we'll probably want to use a k-D tree here
 			
-
-			
 			double min_dist_to_segment = INFINITY;
 			node_id min_origin;
 			node_id min_receiver;
 			for(auto it = cbegin_edges(); it != cend_edges(); ++it){
 				node_id origin = it->first;
 				auto& edges_from = it->second;
-				for(auto it2 = edges_from.cbegin(); it2 != edges_from.cend(); ++it){
+				for(auto it2 = edges_from.cbegin(); it2 != edges_from.cend(); ++it2){
 					node_id receiver = it2->first;
 					double dist_to_segment = distance_to_segment(get_node(origin),
 																 get_node(receiver),

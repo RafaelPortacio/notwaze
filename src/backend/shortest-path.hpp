@@ -11,20 +11,21 @@
 
 
 // dijkstra
-std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph, const node_id& start_point, const node_id& end_point) {
+template <typename GetWeight>
+std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph, const node_id& start_point, const node_id& end_point, GetWeight get_weight) {
     if (start_point == end_point) {
         return {{start_point}};
     }
 
     priorityQueue frontier;
     std::unordered_map<id_t, id_t> came_from;
-    std::unordered_map<id_t, eta_t> cost_so_far;
+    std::unordered_map<id_t, weight_t> cost_so_far;
 
     frontier.push({start_point, 0});
     cost_so_far.insert({start_point, 0});
 
     while (!frontier.empty()) {
-        std::pair<node_id, eta_t> current = frontier.top();
+        std::pair<node_id, weight_t> current = frontier.top();
         frontier.pop();
 
         if (current.first == end_point) {
@@ -34,11 +35,11 @@ std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph, c
         for (auto iter = graph.cbegin_outedges(current.first);
              iter != graph.cend_outedges(current.first);
               ++iter) {
-            eta_t new_cost = cost_so_far.at(current.first) + iter->second.eta;
+            weight_t new_cost = cost_so_far.at(current.first) + iter->second.eta;
 
             if (!cost_so_far.count(iter->first) || new_cost < cost_so_far.at(iter->first)) {
                 cost_so_far[iter->first] = new_cost;
-                eta_t priority = new_cost;
+                weight_t priority = new_cost;
                 frontier.push({iter->first, priority});
                 came_from[iter->first] = current.first;
             }
@@ -63,27 +64,28 @@ std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph, c
 
 
 // A star
-template <typename Heuristic>
-std::optional<std::vector<node_id>> shortest_path_astar(const Graph& graph, const node_id& start_point, const node_id& end_point, Heuristic heuristic) {
+template <typename Heuristic, typename GetWeight>
+std::optional<std::vector<node_id>> shortest_path_astar(const Graph& graph, const node_id& start_point, const node_id& end_point,
+                                                        Heuristic heuristic, GetWeight get_weight) {
     if (start_point == end_point) {
         return {{start_point}};
     }
 
     struct Compare {
-        bool operator() (const std::pair<node_id, eta_t>& l, const std::pair<node_id, eta_t>& r) {
+        bool operator() (const std::pair<node_id, weight_t>& l, const std::pair<node_id, weight_t>& r) {
             return l.second > r.second;
         }
     };
 
-    std::priority_queue<std::pair<node_id, eta_t>, std::vector<std::pair<node_id, eta_t>>, Compare> frontier;
+    std::priority_queue<std::pair<node_id, weight_t>, std::vector<std::pair<node_id, weight_t>>, Compare> frontier;
     std::unordered_map<node_id, node_id> came_from;
-    std::unordered_map<node_id, eta_t> cost_so_far;
+    std::unordered_map<node_id, weight_t> cost_so_far;
 
     frontier.push({start_point, 0});
     cost_so_far.insert({start_point, 0});
 
     while (!frontier.empty()) {
-        std::pair<node_id, eta_t> current = frontier.top();
+        std::pair<node_id, weight_t> current = frontier.top();
         frontier.pop();
 
         if (current.first == end_point) {
@@ -93,11 +95,11 @@ std::optional<std::vector<node_id>> shortest_path_astar(const Graph& graph, cons
         for (auto iter = graph.cbegin_outedges(current.first);
              iter != graph.cend_outedges(current.first);
               ++iter) {
-            eta_t new_cost = cost_so_far.at(current.first) + iter->second.eta;
+            weight_t new_cost = cost_so_far.at(current.first) + get_weight(iter->second);
 
             if (!cost_so_far.count(iter->first) || new_cost < cost_so_far.at(iter->first)) {
                 cost_so_far[iter->first] = new_cost;
-                eta_t priority = new_cost + heuristic(graph[iter->first], graph[end_point]);
+                weight_t priority = new_cost + heuristic(graph[iter->first], graph[end_point]);
                 frontier.push({iter->first, priority});
                 came_from[iter->first] = current.first;
             }
@@ -121,11 +123,19 @@ std::optional<std::vector<node_id>> shortest_path_astar(const Graph& graph, cons
 }
 
 
-inline eta_t euclidean_heuristic(const Node& current, const Node& destination) {
+inline weight_t euclidean_heuristic(const Node& current, const Node& destination) {
     return euclidean_distance(current, destination);
 }
 
 
-inline eta_t manhattan_heuristic(const Node& current, const Node& destination) {
+inline weight_t manhattan_heuristic(const Node& current, const Node& destination) {
     return manhattan_distance(current, destination);
+}
+
+inline weight_t get_weight_eta(const Edge& edge) {
+    return edge.eta;
+}
+
+inline weight_t get_weight_length(const Edge& edge) {
+    return edge.length;
 }
