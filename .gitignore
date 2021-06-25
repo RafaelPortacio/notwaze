@@ -3,6 +3,8 @@
 src/frontend/dist/
 waze-server
 get-shortest-path
+cli
+shortest
 benchmark
 
 # Conan stuff:
