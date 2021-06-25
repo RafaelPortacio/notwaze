@@ -1,5 +1,5 @@
 .PHONY: serve
-serve:
+serve: src/backend/waze-server
 	$(MAKE) serve-backend & $(MAKE) serve-frontend
 
 .PHONY: serve-backend

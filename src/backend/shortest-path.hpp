@@ -7,6 +7,7 @@
 #include <queue>
 
 #include "graph.hpp"
+#include "priority-queue.hpp"
 
 
 // dijkstra
@@ -15,15 +16,9 @@ std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph, c
         return {{start_point}};
     }
 
-    struct Compare {
-        bool operator() (const std::pair<node_id, eta_t>& l, const std::pair<node_id, eta_t>& r) {
-            return l.second > r.second;
-        }
-    };
-
-    std::priority_queue<std::pair<node_id, eta_t>, std::vector<std::pair<node_id, eta_t>>, Compare> frontier;
-    std::unordered_map<node_id, node_id> came_from;
-    std::unordered_map<node_id, eta_t> cost_so_far;
+    priorityQueue frontier;
+    std::unordered_map<id_t, id_t> came_from;
+    std::unordered_map<id_t, eta_t> cost_so_far;
 
     frontier.push({start_point, 0});
     cost_so_far.insert({start_point, 0});
