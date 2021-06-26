@@ -14,7 +14,7 @@ CPPFLAGS += -std=c++17
 CFLAGS += -Wall
 
 # Recipe-related Variables
-MAINS = server.cpp get-shortest-path.cpp benchmark.cpp
+MAINS = server.cpp get-shortest-path.cpp cli.cpp benchmark.cpp
 SOURCES = $(filter-out $(MAINS), $(wildcard *.cpp))
 HEADERS = $(wildcard *.hpp)
 OBJECTS = $(patsubst %.cpp, .build/%.o, $(SOURCES))
@@ -55,6 +55,12 @@ waze-server: .build/server.o $(OBJECTS)
 
 get-shortest-path: .build/get-shortest-path.o $(OBJECTS)
 	$(CXX) -g -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
+
+cli: .build/cli.o $(OBJECTS)
+	$(CXX) -g -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
+
+shortest: cli
+	cp $< $@
 
 benchmark: .build/benchmark.o $(OBJECTS)
 	$(CXX) -g -Wall -o $@ $^ $(LDFLAGS) $(LDLIBS)
