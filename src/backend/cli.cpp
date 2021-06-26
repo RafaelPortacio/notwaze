@@ -5,7 +5,6 @@
 
 #include "graph.hpp"
 #include "io.hpp"
-#include "graph.hpp"
 #include "shortest-path.hpp"
 
 
@@ -46,22 +45,39 @@ int main() {
     starting_point_str_x = starting_point_str_x.substr(0, starting_point_str_x.size()-1);
     ending_point_str_x = ending_point_str_x.substr(0, ending_point_str_x.size()-1);
 
-    long double starting_point_x = std::stold(starting_point_str_x);
-    long double starting_point_y = std::stold(starting_point_str_y);
-    long double ending_point_x = std::stold(ending_point_str_x);
-    long double ending_point_y = std::stold(ending_point_str_y);
+    double starting_point_x = std::stod(starting_point_str_x);
+    double starting_point_y = std::stod(starting_point_str_y);
+    double ending_point_x = std::stod(ending_point_str_x);
+    double ending_point_y = std::stod(ending_point_str_y);
 
     // Shortest path
-
     double start_time;
     double end_time;
     double time;
 
+    auto [starting_point, ending_point, _, __] = graph.coords_to_ids({starting_point_x, starting_point_y}, 
+                                                                     {ending_point_x, ending_point_y});
+
+
+    // Time and run code 
     start_time = clock();
 
-    double distance = pow(pow(ending_point_x - starting_point_x, 2.0) + pow(ending_point_y - starting_point_y, 2.0), 0.5);
+    std::optional<std::vector<node_id>> maybe_path;
+    if (algoritm == 0) {
+        maybe_path = shortest_path_dijkstra(graph, starting_point, ending_point, get_weight_length);
+    } else if (algoritm == 1) {
+        maybe_path = shortest_path_astar(graph, starting_point, ending_point, euclidean_heuristic, get_weight_length);
+    } else {
+        maybe_path = shortest_path_astar(graph, starting_point, ending_point, manhattan_heuristic, get_weight_length);
+    }
 
     end_time = clock();
+
+    if (!maybe_path) {
+        return 2;
+    }
+
+    std::vector<node_id> path = *maybe_path;
 
     time = (end_time - start_time) * 1000.0 / CLOCKS_PER_SEC;
 
@@ -74,10 +90,28 @@ int main() {
         std::cout << "The shortest path using A star with manhattan heuristic is ";
     };
 
+    weight_t distance = 0;
+    for (size_t i = 0; i < path.size()-1; ++i) {
+        distance += graph.get_edge(path[i], path[i+1]).length;
+    };
+
     std::cout << distance;
     std::cout << " meters (";
     std::cout << time;
     std::cout << " seconds)" << std::endl;
+
+    // Print path
+
+    std::cout << "Coordinates of the shortest path:" << std::endl;
+    for (auto i = 0; i < path.size(); ++i) {
+        node_id id = path[i];
+        std::cout << "[";
+        std::cout << graph[id].latitude;
+        std::cout << ", ";
+        std::cout << graph[id].longitude;
+        std::cout << "]" << std::endl; 
+    }
+
 
     return 0;
 }
