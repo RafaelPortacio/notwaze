@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl;
         return 0;
     }
-    const std::vector<node_id>& path = *maybe_path;
+    std::vector<node_id>& path = *maybe_path;
     std::reverse(std::begin(path), std::end(path));
 
     assert(path.front() == starting_point);
