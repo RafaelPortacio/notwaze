@@ -51,7 +51,7 @@ int main() {
     double ending_point_x = std::stod(ending_point_str_x);
     double ending_point_y = std::stod(ending_point_str_y);
 
-    // Shortest path
+    // Take node id
     double start_time;
     double end_time;
 
@@ -110,7 +110,6 @@ int main() {
         std::cout << graph[id].longitude;
         std::cout << "]" << std::endl; 
     }
-
 
     return 0;
 }
