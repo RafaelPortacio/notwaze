@@ -197,17 +197,32 @@ class Graph {
 			
 			return std::pair(min_origin, min_receiver);
 		}
-            /*origin_of_edge = *std::min_element(cbegin_edges(), cend_edges(),
-                                     [&query_node](const auto& l, const auto& r) {
-										 std::min_element(l.second.begin(), l.second.end(), 
-									     [&query_node](const auto& l1, const auto& r1) { return
-										 distance_to_segment(_nodes[l.first], _nodes[l1.first], query_node) <
-										 distance_to_segment(_nodes[l.first], _nodes[r1.first], query_node)})
-                                         < 
-										 std::min_element(r.second.begin(), r.second.end(), 
-									     [&query_node](const auto& l2, const auto& r2) {
-										 distance_to_segment(_nodes[r.first], _nodes[l2.first], query_node) <
-										 distance_to_segment(_nodes[r.first], _nodes[r2.first], query_node)})});
-			
-			return std::pair(origin_of_edge.first, min_element()}); */
+    
+        std::tuple<node_id, node_id, std::pair<int, Node>, std::pair<int, Node>> coords_to_ids(const std::pair<double, double>& start_coords,
+                                                                                               const std::pair<double, double>& end_coords) const {
+            Node starting_point = Node {.latitude=start_coords.first, .longitude=start_coords.second};
+            Node ending_point = Node {.latitude=end_coords.first, .longitude=end_coords.second};
+            std::pair<node_id,node_id> start_edge = lookup_nodes(starting_point);
+            std::pair<node_id,node_id> end_edge = lookup_nodes(ending_point);
+                                                 
+            Node start_node_1 = get_node(start_edge.first);
+            Node start_node_2 = get_node(start_edge.second);
+            Node end_node_1 = get_node(end_edge.first);
+            Node end_node_2 = get_node(end_edge.second);
+                         
+            std::pair<int, Node> start_proj = projection(start_node_1, start_node_2, starting_point);
+            std::pair<int, Node> end_proj = projection(end_node_1, end_node_2, ending_point);
+                         
+            node_id starting_point_id = start_edge.second;
+            node_id ending_point_id = end_edge.first;
+                                 
+            if(start_proj.first == 0) {
+                starting_point_id = start_edge.first;
+            }
+                         
+            if(end_proj.first == 1) {
+                ending_point_id = end_edge.second;
+            }
+            return {starting_point_id, ending_point_id, start_proj, end_proj};            
+        }
 };

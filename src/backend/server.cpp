@@ -28,41 +28,22 @@ int main() {
                      [&graph](const auto& req, const auto& params) {
                          const auto qp = restinio::parse_query(req->header().query());
 
-                         Node starting_point = Node {
-                             .latitude = std::stod((std::string)qp["startPointLat"]),
-                             .longitude = std::stod((std::string)qp["startPointLong"]),
-                         };
-                         Node ending_point = Node {
-                             .latitude = std::stod((std::string)qp["endPointLat"]),
-                             .longitude = std::stod((std::string)qp["endPointLong"]),
-                         };
+                         std::pair<double, double> starting_point = {std::stod((std::string)qp["startPointLat"]),
+                                                                     std::stod((std::string)qp["startPointLong"])};
+                         
+                         std::pair<double, double> ending_point = {std::stod((std::string)qp["endPointLat"]),
+                                                                   std::stod((std::string)qp["endPointLong"])};
+                         
                          std::string method = (std::string)qp["method"];
 
                          
-                         std::pair<node_id,node_id> start_edge = graph.lookup_nodes(starting_point);
-                         std::pair<node_id,node_id> end_edge = graph.lookup_nodes(ending_point);
-                                                 
-                         Node start_node_1 = graph.get_node(start_edge.first);
-                         Node start_node_2 = graph.get_node(start_edge.second);
-                         Node end_node_1 = graph.get_node(end_edge.first);
-                         Node end_node_2 = graph.get_node(end_edge.second);
-                         
-                         std::pair<int, Node> start_proj = projection(start_node_1, start_node_2, starting_point);
-                         std::pair<int, Node> end_proj = projection(end_node_1, end_node_2, ending_point);
-                         
-                         node_id starting_point_id = start_edge.second;
-                         node_id ending_point_id = end_edge.first;
-                         
-                         
-                         if(start_proj.first == 0) {
-                             starting_point_id = start_edge.first;
-                         }
-                         
-                         if(end_proj.first == 1) {
-                             ending_point_id = end_edge.second;
-                         }
-                         
-                        
+                         std::tuple<node_id, node_id,
+                                    std::pair<int, Node>,
+                                    std::pair<int, Node>> start_end_info = graph.coords_to_ids(starting_point, ending_point);
+                         node_id starting_point_id = std::get<0>(start_end_info);
+                         node_id ending_point_id = std::get<1>(start_end_info);
+                         std::pair<int, Node> start_proj = std::get<2>(start_end_info);
+                         std::pair<int, Node> end_proj = std::get<3>(start_end_info);
                          
                          
 
