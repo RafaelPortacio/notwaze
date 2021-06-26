@@ -68,8 +68,10 @@ async function find_and_draw_path(starting_point, destination) {
     }
     var data = await data.json();
 
-    var starting_point = data["shortest-paths"][0]["path"][0];
-    var ending_point =   data["shortest-paths"][0]["path"][data["shortest-paths"][0]["path"].length-1];
+    console.log(data);
+
+    var starting_point = data["shortest-paths"]["shortest"]["path"][0];
+    var ending_point =   data["shortest-paths"]["shortest"]["path"][data["shortest-paths"]["shortest"]["path"].length-1];
 
     // Add markers
     let marker_opts = {draggable: true, autoPan: true}
@@ -91,12 +93,22 @@ async function find_and_draw_path(starting_point, destination) {
     marker_end.on("dragend", dragEnd);
 
     // Draw lines for indicating paths
-    let extents = data["shortest-paths"].map(function(path) {
+    let extents = Object.entries(data["shortest-paths"]).map(function([key, path]) {
+        let color;
+        if (key == "shortest")
+            color = "blue";
+        else if (key == "fastest")
+            color = "green";
+        else
+            color = "gray";
+
         let latlongs = path["path"].map(x => [x.latitude, x.longitude]);
         latlongs.unshift([starting_point.latitude, starting_point.longitude]);
         latlongs.push   ([  ending_point.latitude,   ending_point.longitude]);
         let polyline = L.polyline(latlongs, {
+            color: color,
             weight: 7,
+            opacity: 0.8,
         }).addTo(leaflet_map).bindPopup("<p>ETA: " + humanizeDuration(1000 * Math.round(path["eta"])) + "<br>" +
                                         "Length: " + path["length"] + " meters</p>" +
                                         "<p>Time to compute: " + humanizeDuration(Math.round(path["compute-time"])) + "</p>", {
