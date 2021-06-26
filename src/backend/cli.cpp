@@ -10,6 +10,7 @@
 
 
 int main() {
+    // Initialization variables
     int algoritm = -1;
     std::string starting_point_str_x;
     std::string starting_point_str_y;
@@ -89,9 +90,10 @@ int main() {
         std::cout << "The shortest path using A star with manhattan heuristic is ";
     };
 
+    // Calculation distance
     weight_t distance = 0;
     for (size_t i = 0; i < path.size()-1; ++i) {
-        distance += graph.get_edge(path[i], path[i+1]).length;
+        distance += graph.get_edge(path[i+1], path[i]).length;
     };
 
     std::cout << distance;
