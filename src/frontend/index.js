@@ -76,8 +76,8 @@ async function find_and_draw_path(starting_point, destination) {
     let marker_start = L.marker([starting_point.latitude, starting_point.longitude], marker_opts).addTo(leaflet_map);
     let marker_end = L.marker([ending_point.  latitude, ending_point.  longitude], marker_opts).addTo(leaflet_map);
     function dragEnd(ev) {
-        let end = marker_start.getLatLng();
-        let start   = marker_end.getLatLng();
+        let start = marker_start.getLatLng();
+        let end   = marker_end.getLatLng();
         let new_url = window.location.origin + "/?"
             + "start-lat=" + start.lat
             + "&start-long=" + start.lng
