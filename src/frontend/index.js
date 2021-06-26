@@ -25,6 +25,20 @@ class BackendUnavailableError extends Error {
     }
 }
 
+function titlecase(str) {
+    return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
+}
+
+function show_popup_on_hover(elem) {
+    elem.on("mouseover", function(ev) {
+        elem.openPopup();
+        elem.getPopup().setLatLng(ev.latlng);
+    });
+    elem.on("mouseout",  function(ev) {
+        elem.closePopup();
+    });
+}
+
 async function geocode_latlong(place_str) {
     var url = "https://nominatim.openstreetmap.org/search?"
         + "street=" + encodeURI(place_str)
@@ -77,8 +91,20 @@ async function find_and_draw_path(starting_point, destination) {
 
     // Add markers
     let marker_opts = {draggable: true, autoPan: true}
-    let marker_start = L.marker([starting_point.latitude, starting_point.longitude], marker_opts).addTo(leaflet_map);
-    let marker_end = L.marker([ending_point.  latitude, ending_point.  longitude], marker_opts).addTo(leaflet_map);
+    let marker_start = L.marker([starting_point.latitude, starting_point.longitude], marker_opts)
+        .addTo(leaflet_map)
+        .bindPopup(
+            "<h3>Starting Point</h3>",
+            { autoPan: false, closeButton: false, closePopupOnClick: false }
+        );
+    show_popup_on_hover(marker_start);
+    let marker_end = L.marker([ending_point.  latitude, ending_point.  longitude], marker_opts)
+        .addTo(leaflet_map)
+        .bindPopup(
+            "<h3>Destination</h3>",
+            { autoPan: false, closeButton: false, closeOnClick: null }
+        );
+    show_popup_on_hover(marker_end);
     function dragEnd(ev) {
         let start = marker_start.getLatLng();
         let end   = marker_end.getLatLng();
@@ -111,19 +137,14 @@ async function find_and_draw_path(starting_point, destination) {
         color: color,
         weight: 7,
         opacity: 0.8,
-    }).addTo(leaflet_map).bindPopup("<p>ETA: " + humanizeDuration(1000 * Math.round(data["eta"])) + "<br>" +
-                                    "Length: " + data["length"] + " meters</p>" +
-                                    "<p>Time to compute: " + humanizeDuration(Math.round(data["compute-time"])) + "</p>", {
-        autoPan: false,
-        closeButton: false,
-    });
-    polyline.on("mouseover", function(ev) {
-        polyline.openPopup();
-        polyline.getPopup().setLatLng(ev.latlng);
-    });
-    polyline.on("mouseout",  function(ev) {
-        polyline.closePopup();
-    });
+    }).addTo(leaflet_map).bindPopup(
+        "<h3>" + titlecase(goal) + " Path" + "</h3>" +
+        "<p>ETA: " + humanizeDuration(1000 * Math.round(data["eta"])) + "<br>" +
+        "Length: " + data["length"] + " meters</p>" +
+        "<p>Time to compute: " + humanizeDuration(Math.round(data["compute-time"])) + "</p>",
+        { autoPan: false, closeButton: false }
+    );
+    show_popup_on_hover(polyline);
 
     leaflet_map.fitBounds(polyline.getBounds());
 }
