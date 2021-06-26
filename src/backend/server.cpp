@@ -103,6 +103,7 @@ int main() {
                          std::pair<double, double> ending_point = {std::stod((std::string)qp["endPointLat"]),
                                                                    std::stod((std::string)qp["endPointLong"])};
                          std::string method_str = (std::string)qp["method"];
+                         std::string goal_str = (std::string)qp["goal"];
 
                          ShortestPathMethod method;
                          if (method_str == "dijkstra")
@@ -114,18 +115,19 @@ int main() {
                          else
                              throw std::runtime_error("bad shortest path method");
 
-                         json&& json {
-                             {"shortest-paths", json::object({
-                                 {"shortest",
-                                  get_path_json(graph, starting_point, ending_point, method, get_weight_length)},
-                                 {"fastest",
-                                  get_path_json(graph, starting_point, ending_point, method, get_weight_eta)},
-                             })}
-                         };
+                         std::string json_str;
+                         if (goal_str == "shortest")
+                             json_str
+                                 = get_path_json(graph, starting_point, ending_point, method, get_weight_length).dump();
+                         else if (goal_str == "fastest")
+                             json_str
+                                 = get_path_json(graph, starting_point, ending_point, method, get_weight_eta).dump();
+                         else
+                             throw std::runtime_error("bad goal");
 
                          return req->create_response()
                              .append_header(restinio::http_field_t::access_control_allow_origin, "*")
-                             .set_body(json.dump())
+                             .set_body(json_str)
                              .done();
                      });
     router->non_matched_request_handler([](auto req) {

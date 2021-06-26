@@ -27,6 +27,7 @@
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                     </button>
                     <div class="dropdown-content">
+                        <p>
                         <label for="method-input">Shortest-Path Method</label>
                         <br>
                         <select name="method" id="method-input">
@@ -34,6 +35,16 @@
                             <option value="astar-manhattan">A* with Manhattan Heuristic</option>
                             <option value="dijkstra">Dijkstra</option>
                         </select>
+                        </p>
+
+                        <p>
+                        <label for="goal-input">Goal</label>
+                        <br>
+                        <select name="goal" id="goal-input">
+                            <option value="shortest">Shortest Path</option>
+                            <option value="fastest">Fastest Path</option>
+                        </select>
+                        </p>
                     </div>
                 </div>
             </form>

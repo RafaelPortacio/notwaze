@@ -56,6 +56,7 @@ async function find_and_draw_path(starting_point, destination) {
 
     var url = "http://localhost:8080/shortestPath?"
         + "method=" + encodeURI(params.get("method") ?? "astar-euclidean")
+        + "&goal=" + encodeURI(params.get("goal"))
         + "&startPointLat=" + encodeURI(start_point_latitude)
         + "&startPointLong=" + encodeURI(start_point_longitude)
         + "&endPointLat=" + encodeURI(end_point_latitude)
@@ -70,8 +71,9 @@ async function find_and_draw_path(starting_point, destination) {
 
     console.log(data);
 
-    var starting_point = data["shortest-paths"]["shortest"]["path"][0];
-    var ending_point =   data["shortest-paths"]["shortest"]["path"][data["shortest-paths"]["shortest"]["path"].length-1];
+    var starting_point = data["path"][0];
+    var ending_point =   data["path"][data["path"].length-1];
+    let goal = params.get("goal");
 
     // Add markers
     let marker_opts = {draggable: true, autoPan: true}
@@ -81,7 +83,8 @@ async function find_and_draw_path(starting_point, destination) {
         let start = marker_start.getLatLng();
         let end   = marker_end.getLatLng();
         let new_url = window.location.origin + "/?"
-            + "start-lat=" + start.lat
+            + "goal=" + goal
+            + "&start-lat=" + start.lat
             + "&start-long=" + start.lng
             + "&end-lat=" + end.lat
             + "&end-long=" + end.lng;
@@ -93,38 +96,36 @@ async function find_and_draw_path(starting_point, destination) {
     marker_end.on("dragend", dragEnd);
 
     // Draw lines for indicating paths
-    let extents = Object.entries(data["shortest-paths"]).map(function([key, path]) {
-        let color;
-        if (key == "shortest")
-            color = "blue";
-        else if (key == "fastest")
-            color = "green";
-        else
-            color = "gray";
+    let color;
+    if (goal == "shortest")
+        color = "blue";
+    else if (goal == "fastest")
+        color = "green";
+    else
+        color = "gray";
 
-        let latlongs = path["path"].map(x => [x.latitude, x.longitude]);
-        latlongs.unshift([starting_point.latitude, starting_point.longitude]);
-        latlongs.push   ([  ending_point.latitude,   ending_point.longitude]);
-        let polyline = L.polyline(latlongs, {
-            color: color,
-            weight: 7,
-            opacity: 0.8,
-        }).addTo(leaflet_map).bindPopup("<p>ETA: " + humanizeDuration(1000 * Math.round(path["eta"])) + "<br>" +
-                                        "Length: " + path["length"] + " meters</p>" +
-                                        "<p>Time to compute: " + humanizeDuration(Math.round(path["compute-time"])) + "</p>", {
-            autoPan: false,
-            closeButton: false,
-        });
-        polyline.on("mouseover", function(ev) {
-            polyline.openPopup();
-            polyline.getPopup().setLatLng(ev.latlng);
-        });
-        polyline.on("mouseout",  function(ev) {
-            polyline.closePopup();
-        });
-        return polyline.getBounds();
+    let latlongs = data["path"].map(x => [x.latitude, x.longitude]);
+    latlongs.unshift([starting_point.latitude, starting_point.longitude]);
+    latlongs.push   ([  ending_point.latitude,   ending_point.longitude]);
+    let polyline = L.polyline(latlongs, {
+        color: color,
+        weight: 7,
+        opacity: 0.8,
+    }).addTo(leaflet_map).bindPopup("<p>ETA: " + humanizeDuration(1000 * Math.round(data["eta"])) + "<br>" +
+                                    "Length: " + data["length"] + " meters</p>" +
+                                    "<p>Time to compute: " + humanizeDuration(Math.round(data["compute-time"])) + "</p>", {
+        autoPan: false,
+        closeButton: false,
     });
-    leaflet_map.fitBounds(extents.reduce((acc, x) => acc.extend(x)));
+    polyline.on("mouseover", function(ev) {
+        polyline.openPopup();
+        polyline.getPopup().setLatLng(ev.latlng);
+    });
+    polyline.on("mouseout",  function(ev) {
+        polyline.closePopup();
+    });
+
+    leaflet_map.fitBounds(polyline.getBounds());
 }
 
 document.getElementById("starting-point-input").value = params.get("starting-point", "");
