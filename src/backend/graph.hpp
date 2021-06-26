@@ -6,9 +6,7 @@
 #include <unordered_map>
 #include <algorithm>
 
-using node_id = unsigned long int; // we could use size_t, but unsigned int seems to be
-                           	       // enough for us, and using it will save us plenty of
-                           	       // memory we might need.
+using node_id = unsigned long int;
 
 using weight_t = double; // in minutes or meters
 
@@ -33,75 +31,44 @@ struct Node {
     friend double distance_to_segment(const Node& s1,
                                       const Node& s2,
                                       const Node& p) {
-
-
-        auto pair_dot_prod = [](std::pair<double, double> vec1,
-                             std::pair<double, double> vec2) {
+        auto pair_dot_prod = [](std::pair<double, double> vec1, std::pair<double, double> vec2) {
             return vec1.first*vec2.first + vec1.second*vec2.second;
         };
-
-        auto pair_cross_prod = [](std::pair<double, double> vec1,
-                               std::pair<double, double> vec2) {
+        auto pair_cross_prod = [](std::pair<double, double> vec1, std::pair<double, double> vec2) {
             return vec1.first*vec2.second - vec1.second*vec2.first;
         };
 
+        std::pair<double, double> vec_s1_to_p = {p.latitude - s1.latitude, p.longitude - s1.longitude};
+        std::pair<double, double> vec_s2_to_p = {p.latitude - s2.latitude, p.longitude - s2.longitude};
+        std::pair<double, double> vec_s1_to_s2 = {s2.latitude - s1.latitude, s2.longitude - s1.longitude};
 
-        std::pair<double, double> vec_s1_to_p;
-        vec_s1_to_p.first = p.latitude - s1.latitude;
-        vec_s1_to_p.second = p.longitude - s1.longitude;
-
-        std::pair<double, double> vec_s2_to_p;
-        vec_s2_to_p.first = p.latitude - s2.latitude;
-        vec_s2_to_p.second = p.longitude - s2.longitude;
-
-        std::pair<double, double> vec_s1_to_s2;
-        vec_s1_to_s2.first = s2.latitude - s1.latitude;
-        vec_s1_to_s2.second = s2.longitude - s1.longitude;
-
-        if (pair_dot_prod(vec_s1_to_p, vec_s1_to_s2) < 0){
+        if (pair_dot_prod(vec_s1_to_p, vec_s1_to_s2) < 0)
             return euclidean_distance(s1, p);
-        }else if(-pair_dot_prod(vec_s2_to_p, vec_s1_to_s2) < 0){
+        if (-pair_dot_prod(vec_s2_to_p, vec_s1_to_s2) < 0)
             return euclidean_distance(s2, p);
-        }else{
-            return std::abs(pair_cross_prod(vec_s1_to_p, vec_s2_to_p))/
-                   euclidean_distance(s1, s2);
-        }
+
+        return std::abs(pair_cross_prod(vec_s1_to_p, vec_s2_to_p)) / euclidean_distance(s1, s2);
     }
 
     friend std::pair<int, Node> projection(const Node& s1,
-                                                const Node& s2,
-                                                const Node& p) {
-
-
-        auto pair_dot_prod = [](std::pair<double, double> vec1,
-                             std::pair<double, double> vec2) {
+                                           const Node& s2,
+                                           const Node& p) {
+        auto pair_dot_prod = [](std::pair<double, double> vec1, std::pair<double, double> vec2) {
             return vec1.first*vec2.first + vec1.second*vec2.second;
         };
 
-        std::pair<double, double> vec_s1_to_p;
-        vec_s1_to_p.first = p.latitude - s1.latitude;
-        vec_s1_to_p.second = p.longitude - s1.longitude;
+        std::pair<double, double> vec_s1_to_p = {p.latitude - s1.latitude, p.longitude - s1.longitude};
+        std::pair<double, double> vec_s2_to_p = {p.latitude - s2.latitude, p.longitude - s2.longitude};
+        std::pair<double, double> vec_s1_to_s2 = {s2.latitude - s1.latitude, s2.longitude - s1.longitude};
 
-        std::pair<double, double> vec_s2_to_p;
-        vec_s2_to_p.first = p.latitude - s2.latitude;
-        vec_s2_to_p.second = p.longitude - s2.longitude;
+        if (pair_dot_prod(vec_s1_to_p, vec_s1_to_s2) < 0)
+            return {0, Node {.latitude = s1.latitude, .longitude = s1.longitude}};
+        if (-pair_dot_prod(vec_s2_to_p, vec_s1_to_s2) < 0)
+            return {1, Node {.latitude = s2.latitude, .longitude = s2.longitude}};
 
-        std::pair<double, double> vec_s1_to_s2;
-        vec_s1_to_s2.first = s2.latitude - s1.latitude;
-        vec_s1_to_s2.second = s2.longitude - s1.longitude;
-
-        if (pair_dot_prod(vec_s1_to_p, vec_s1_to_s2) < 0){
-            return {0, Node {.latitude = s1.latitude,
-                                .longitude = s1.longitude}};
-        }else if(-pair_dot_prod(vec_s2_to_p, vec_s1_to_s2) < 0){
-            return {1, Node {.latitude = s2.latitude,
-                                .longitude = s2.longitude}};
-        }else{
-            double proj_frac = (std::abs(pair_dot_prod(vec_s1_to_p, vec_s1_to_s2))/
-                   squared_euclidean_distance(s1, s2));
-			return {2, Node {.latitude = s1.latitude + proj_frac*vec_s1_to_s2.first,
-					        .longitude = s1.longitude + proj_frac*vec_s1_to_s2.second}};
-        }
+        double proj_frac = std::abs(pair_dot_prod(vec_s1_to_p, vec_s1_to_s2)) / squared_euclidean_distance(s1, s2);
+        return { 2, Node { .latitude = s1.latitude + proj_frac*vec_s1_to_s2.first,
+                           .longitude = s1.longitude + proj_frac*vec_s1_to_s2.second }};
     }
 };
 
@@ -169,38 +136,35 @@ class Graph {
                                 })->second;
         }
 
-		const Node& get_node(node_id the_node_id) const {
-			return _nodes.at(the_node_id);
-		}
+        const Node& get_node(node_id the_node_id) const {
+            return _nodes.at(the_node_id);
+        }
 
         std::pair<node_id, node_id> lookup_nodes(const Node& query_node) const {
-            // TODO: we'll probably want to use a k-D tree here
+            double min_dist_to_segment = INFINITY;
+            node_id min_origin = -1;
+            node_id min_receiver = -1;
+            for (auto it = cbegin_edges(); it != cend_edges(); ++it) {
+                node_id origin = it->first;
+                const auto& edges_from = it->second;
+                for (auto it2 = edges_from.cbegin(); it2 != edges_from.cend(); ++it2) {
+                    node_id receiver = it2->first;
+                    double dist_to_segment = distance_to_segment(get_node(origin), get_node(receiver), query_node);
+                    if (dist_to_segment < min_dist_to_segment) {
+                        min_dist_to_segment = dist_to_segment;
+                        min_origin = origin;
+                        min_receiver = receiver;
+                    }
+                }
+            }
 
-			double min_dist_to_segment = INFINITY;
-			node_id min_origin;
-			node_id min_receiver;
-			for(auto it = cbegin_edges(); it != cend_edges(); ++it){
-				node_id origin = it->first;
-				auto& edges_from = it->second;
-				for(auto it2 = edges_from.cbegin(); it2 != edges_from.cend(); ++it2){
-					node_id receiver = it2->first;
-					double dist_to_segment = distance_to_segment(get_node(origin),
-																 get_node(receiver),
-																 query_node);
-					if(dist_to_segment < min_dist_to_segment) {
-						min_dist_to_segment = dist_to_segment;
-			            min_origin = origin;
-			            min_receiver = receiver;
-					}
-				}
-			}
-
-			return std::pair(min_origin, min_receiver);
-		}
+            return {min_origin, min_receiver};
+        }
 
         std::tuple<std::pair<node_id,node_id>, std::pair<node_id,node_id>, node_id, node_id,
-				   std::pair<int, Node>, std::pair<int, Node>, double, double> coords_to_ids(const std::pair<double, double>& start_coords,
-                                                                                               const std::pair<double, double>& end_coords) const {
+                   std::pair<int, Node>, std::pair<int, Node>, double, double>
+                       coords_to_ids(const std::pair<double, double>& start_coords,
+                                     const std::pair<double, double>& end_coords) const {
             Node starting_point = Node {.latitude=start_coords.first, .longitude=start_coords.second};
             Node ending_point = Node {.latitude=end_coords.first, .longitude=end_coords.second};
             std::pair<node_id,node_id> start_edge = lookup_nodes(starting_point);
@@ -217,20 +181,27 @@ class Graph {
             node_id starting_point_id = start_edge.second;
             node_id ending_point_id = end_edge.first;
 
-            if(start_proj.first == 0) {
+            if(start_proj.first == 0)
                 starting_point_id = start_edge.first;
-            }
 
-            if(end_proj.first == 1) {
+            if(end_proj.first == 1)
                 ending_point_id = end_edge.second;
-            }
 
-			double start_proj_fraction = euclidean_distance(start_node_2, start_proj.second)/
-                        euclidean_distance(start_node_1, start_node_2);
+            double start_proj_fraction
+                = euclidean_distance(start_node_2, start_proj.second) / euclidean_distance(start_node_1, start_node_2);
 
-            double end_proj_fraction = euclidean_distance(end_node_1, end_proj.second)/
-                        euclidean_distance(end_node_1, end_node_2);
+            double end_proj_fraction
+                = euclidean_distance(end_node_1, end_proj.second) / euclidean_distance(end_node_1, end_node_2);
 
-            return {start_edge, end_edge, starting_point_id, ending_point_id, start_proj, end_proj, start_proj_fraction, end_proj_fraction};
+            return {
+                start_edge,
+                end_edge,
+                starting_point_id,
+                ending_point_id,
+                start_proj,
+                end_proj,
+                start_proj_fraction,
+                end_proj_fraction,
+            };
         }
 };

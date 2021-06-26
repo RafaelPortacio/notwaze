@@ -17,9 +17,8 @@ int main() {
     std::string ending_point_str_x;
     std::string ending_point_str_y;
 
-
     std::cout << "... Loading index";
-    
+
     // Load graph
     const Graph graph = load_graph_from_json_file("rj_graph_database.json");
 
@@ -27,12 +26,11 @@ int main() {
     std::cout << ", pronto!" << std::endl;
     std::cout << "Which algoritm to use?" << std::endl;
     while (algoritm != 0 && algoritm != 1 && algoritm != 2) {
-        std::cout << "[0] Dijkstra" << std::endl 
+        std::cout << "[0] Dijkstra" << std::endl
                   << "[1] A* with euclidean heuristic" << std::endl
                   << "[2] A* with manhattan heuristic" << std::endl;
         std::cin >> algoritm;
     }
-
 
     // Starting point and ending point
     std::cout << "Enter the origin: ";
@@ -53,13 +51,10 @@ int main() {
     double ending_point_y = std::stod(ending_point_str_y);
 
     // Take node id
-    double start_time;
-    double end_time;
-
-    auto [starting_point, ending_point, _, __] = graph.coords_to_ids({starting_point_x, starting_point_y}, 
+    auto [starting_point, ending_point, _, __] = graph.coords_to_ids({starting_point_x, starting_point_y},
                                                                      {ending_point_x, ending_point_y});
 
-    // Time and run code 
+    // Time and run code
     auto t0 = std::chrono::high_resolution_clock::now();
 
     std::optional<std::vector<node_id>> maybe_path;
@@ -110,7 +105,7 @@ int main() {
         std::cout << graph[id].latitude;
         std::cout << ", ";
         std::cout << graph[id].longitude;
-        std::cout << "]" << std::endl; 
+        std::cout << "]" << std::endl;
     }
 
     return 0;
