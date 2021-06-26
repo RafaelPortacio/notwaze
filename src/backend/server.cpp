@@ -8,6 +8,7 @@
 #include "graph.hpp"
 #include "io.hpp"
 #include "shortest-path.hpp"
+#include "dbg.h"
 
 using json = nlohmann::json;
 
@@ -30,8 +31,10 @@ int main() {
 
                          std::string method = (std::string)qp["method"];
 
-                         auto [starting_point_id, ending_point_id, start_proj, end_proj]
+                         auto [start_edge, end_edge, starting_point_id, ending_point_id, start_proj,
+                               end_proj, start_proj_fraction, end_proj_fraction]
                              = graph.coords_to_ids(starting_point, ending_point);
+	
 
                          std::function<weight_t(const Node&, const Node&)> heuristic;
 
@@ -76,12 +79,20 @@ int main() {
                                             });
                              weight_t eta = 0;
                              weight_t length = 0;
+							 
                              for (size_t i = 0; i < path.size()-1; ++i) {
-                                 const Edge& edge = graph.get_edge(path[i], path[i+1]);
+                                 const Edge& edge = graph.get_edge(path[i+1], path[i]);
                                  eta += edge.eta;
                                  length += edge.length;
                              }
-
+                             
+                             const Edge& edge = graph.get_edge(start_edge.first, start_edge.second);
+							 eta += edge.eta*start_proj_fraction;
+                             length += edge.length*start_proj_fraction;
+                             const Edge& edge2 = graph.get_edge(end_edge.first, end_edge.second);
+							 eta += edge2.eta*end_proj_fraction;
+                             length += edge2.length*end_proj_fraction;
+                             
                              json&& json {
                                  {"shortest-paths", json::array({
                                      json::object({
