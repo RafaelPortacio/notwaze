@@ -19,6 +19,13 @@ namespace {
     };
 }
 
+// Methods enum
+enum class ShortestPathMethod {
+    Dijkstra,
+    AStarEuclidean,
+    AStarManhattan,
+};
+
 // Dijkstra
 template <typename GetWeight>
 std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph,
