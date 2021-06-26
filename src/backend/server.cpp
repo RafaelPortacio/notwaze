@@ -8,7 +8,6 @@
 #include "graph.hpp"
 #include "io.hpp"
 #include "shortest-path.hpp"
-#include "dbg.h"
 
 using json = nlohmann::json;
 
@@ -35,7 +34,6 @@ int main() {
                                end_proj, start_proj_fraction, end_proj_fraction]
                              = graph.coords_to_ids(starting_point, ending_point);
 	
-
                          std::function<weight_t(const Node&, const Node&)> heuristic;
 
                          std::optional<std::vector<node_id>> maybe_path;

@@ -224,7 +224,7 @@ class Graph {
             if(end_proj.first == 1) {
                 ending_point_id = end_edge.second;
             }
-			
+
 			double start_proj_fraction = euclidean_distance(start_node_2, start_proj.second)/
                         euclidean_distance(start_node_1, start_node_2);
 
