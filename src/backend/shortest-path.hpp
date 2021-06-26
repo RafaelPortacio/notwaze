@@ -78,11 +78,11 @@ std::optional<std::vector<node_id>> shortest_path_astar(const Graph& graph, cons
 
     struct Compare {
         bool operator() (const std::pair<node_id, weight_t>& l, const std::pair<node_id, weight_t>& r) {
-            return l.second > r.second;
+            return l.second < r.second;
         }
     };
 
-    std::priority_queue<std::pair<node_id, weight_t>, std::vector<std::pair<node_id, weight_t>>, Compare> frontier;
+    PriorityQueue<std::pair<node_id, weight_t>, Compare> frontier;
     std::unordered_map<node_id, node_id> came_from;
     std::unordered_map<node_id, weight_t> cost_so_far;
 
