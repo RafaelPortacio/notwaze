@@ -198,7 +198,8 @@ class Graph {
 			return std::pair(min_origin, min_receiver);
 		}
 
-        std::tuple<node_id, node_id, std::pair<int, Node>, std::pair<int, Node>> coords_to_ids(const std::pair<double, double>& start_coords,
+        std::tuple<std::pair<node_id,node_id>, std::pair<node_id,node_id>, node_id, node_id,
+				   std::pair<int, Node>, std::pair<int, Node>, double, double> coords_to_ids(const std::pair<double, double>& start_coords,
                                                                                                const std::pair<double, double>& end_coords) const {
             Node starting_point = Node {.latitude=start_coords.first, .longitude=start_coords.second};
             Node ending_point = Node {.latitude=end_coords.first, .longitude=end_coords.second};
@@ -223,6 +224,13 @@ class Graph {
             if(end_proj.first == 1) {
                 ending_point_id = end_edge.second;
             }
-            return {starting_point_id, ending_point_id, start_proj, end_proj};
+
+			double start_proj_fraction = euclidean_distance(start_node_2, start_proj.second)/
+                        euclidean_distance(start_node_1, start_node_2);
+
+            double end_proj_fraction = euclidean_distance(end_node_1, end_proj.second)/
+                        euclidean_distance(end_node_1, end_node_2);
+
+            return {start_edge, end_edge, starting_point_id, ending_point_id, start_proj, end_proj, start_proj_fraction, end_proj_fraction};
         }
 };
