@@ -20,26 +20,20 @@ namespace std {
 }
 
 
-enum class ShortestPathMethod {
-    Dijkstra,
-    AStarEuclidean,
-    AStarManhattan,
-};
-
 template <ShortestPathMethod method, typename... Args>
 std::optional<std::vector<node_id>> run_shortest_path(Args... args) {
     if constexpr (method == ShortestPathMethod::Dijkstra)
-        return shortest_path_dijkstra(args...);
+        return shortest_path_dijkstra(args..., get_weight_length);
     else if constexpr (method == ShortestPathMethod::AStarEuclidean)
-        return shortest_path_astar(args..., euclidean_heuristic);
+        return shortest_path_astar(args..., euclidean_heuristic, get_weight_length);
     else if constexpr (method == ShortestPathMethod::AStarManhattan)
-        return shortest_path_astar(args..., manhattan_heuristic);
+        return shortest_path_astar(args..., manhattan_heuristic, get_weight_length);
 }
 
 template <ShortestPathMethod method>
 std::unordered_map<std::pair<node_id, node_id>, double> benchmark_shortest_path(const Graph& graph) {
     constexpr size_t n_nodes_to_test = 10;
-    constexpr size_t n_samples = 10;
+    constexpr size_t n_samples = 30;
 
     std::vector<node_id> nodes_to_test(n_nodes_to_test);
     std::transform(graph.cbegin_nodes(), std::next(graph.cbegin_nodes(), n_nodes_to_test), std::begin(nodes_to_test),

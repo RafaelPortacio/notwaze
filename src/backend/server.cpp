@@ -12,85 +12,13 @@
 using json = nlohmann::json;
 
 
-template <typename GetWeight>
-json get_path_json(const Graph& graph,
-                   const std::pair<double, double>& starting_point, const std::pair<double, double>& ending_point,
-                   ShortestPathMethod method,
-                   GetWeight get_weight) {
-    auto [start_edge, end_edge, start_proj, end_proj,
-          start_proj_fraction, end_proj_fraction]
-        = graph.coords_to_ids(starting_point, ending_point);
-    
-    node_id starting_point_id = start_edge.second;
-    node_id ending_point_id = end_edge.first;
+template <typename... Args>
+json get_path_json(Args... args) {
+    auto [compute_time, maybe_data] = get_path_data(args...);
 
-    if(start_proj.first == 0)
-        starting_point_id = start_edge.first;
-
-    if(end_proj.first == 1)
-        ending_point_id = end_edge.second;
-    
-    /*
-    if(start_edge == end_edge && start_proj_fraction <= end_proj_fraction||
-      start_edge == {end_edge.second, end_edge.first}) {
-        
-        
-        caminho = conectar os nos start_proj.second e end_proj.second
-        const Edge& edge = graph.get_edge(start_edge.first, start_edge.second);
-        eta = edge.eta*std::abs(start_proj_fraction, end_proj_fraction);
-        length = edge.length*std::abs(start_proj_fraction, end_proj_fraction);
-        
-    }
-    
-    if(graph.get_edge(start_edge.second, start_edge.first).eta>0.00001) {
-        if(start_proj.first == 0){
-            node_id alt_starting_point_id = start_edge.second;
-        }else{
-            node_id alt_starting_point_id =start_edge.first;
-        }
-    }
-    
-    if(graph.get_edge(end_edge.second, end_edge.first).eta>0.00001) {
-        if(end_proj.first == 1){
-            node_id alt_ending_point_id = end_edge.first;
-        }else{
-            node_id alt_starting_point_id =start_edge.second;
-        }
-    }
-    */
-    
-
-    std::optional<std::vector<node_id>> maybe_path;
-    auto start_time = std::chrono::high_resolution_clock::now();
-    switch (method) {
-        case ShortestPathMethod::Dijkstra:
-            maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id, get_weight);
-            break;
-        case ShortestPathMethod::AStarEuclidean:
-            maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, euclidean_heuristic, get_weight);
-            break;
-        case ShortestPathMethod::AStarManhattan:
-            maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, manhattan_heuristic, get_weight);
-            break;
-    }
-    auto end_time = std::chrono::high_resolution_clock::now();
-
-    unsigned long int compute_time
-        = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-
-    if (!maybe_path)
+    if (!maybe_data)
         return json::object({{"compute-time", compute_time}});
-    std::vector<node_id> path = *maybe_path;
-
-    std::vector<std::pair<double, double>> coord_path = {};
-
-    for (auto it = path.begin(); it != path.end(); it++)
-        coord_path.push_back({graph.get_node(*it).latitude, graph.get_node(*it).longitude});
-    if (end_proj.first == 2)
-        coord_path.insert(coord_path.begin(),
-                          {(end_proj.second).latitude, (end_proj.second).longitude});
-    if (start_proj.first == 2)
-        coord_path.push_back({(start_proj.second).latitude, (start_proj.second).longitude});
+    auto [eta, length, coord_path] = *maybe_data;
 
     std::vector<json> path_latlongs(coord_path.size());
     std::transform(std::rbegin(coord_path), std::rend(coord_path), std::begin(path_latlongs),
@@ -100,23 +28,6 @@ json get_path_json(const Graph& graph,
                            {"longitude", latlong.second}
                        };
                    });
-    weight_t eta = 0;
-    weight_t length = 0;
-
-    for (size_t i = 0; i < path.size()-1; ++i) {
-        const Edge& edge = graph.get_edge(path[i+1], path[i]);
-        eta += edge.eta;
-        length += edge.length;
-    }
-
-    {
-        const Edge& edge = graph.get_edge(start_edge.first, start_edge.second);
-        eta += edge.eta*start_proj_fraction;
-        length += edge.length*start_proj_fraction;
-        const Edge& edge2 = graph.get_edge(end_edge.first, end_edge.second);
-        eta += edge2.eta*end_proj_fraction;
-        length += edge2.length*end_proj_fraction;
-    }
 
     return json::object({
         {"eta", eta},

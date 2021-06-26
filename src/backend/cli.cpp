@@ -50,40 +50,28 @@ int main() {
     double ending_point_x = std::stod(ending_point_str_x);
     double ending_point_y = std::stod(ending_point_str_y);
 
-    // Take node id
-    auto [start_edge, end_edge, _, _, _, _, __] = graph.coords_to_ids({starting_point_x, starting_point_y},
-		                                                              {ending_point_x, ending_point_y});
-	
-	node_id starting_point_id = start_edge.second;
-    node_id ending_point_id = end_edge.first;
+    // Get the desired method
+    ShortestPathMethod method;
+    if (algoritm == 0)
+        method = ShortestPathMethod::Dijkstra;
+    else if (algoritm == 1)
+        method = ShortestPathMethod::AStarEuclidean;
+    else if (algoritm == 2)
+        method = ShortestPathMethod::AStarManhattan;
+    else
+        throw std::runtime_error("bad shortest path method");
 
-    if(start_proj.first == 0)
-        starting_point_id = start_edge.first;
-
-    if(end_proj.first == 1)
-        ending_point_id = end_edge.second;
+    // Get shortest path
+    auto [compute_time, maybe_data] = get_path_data(graph,
+                                                    {starting_point_x, starting_point_y},
+                                                    {ending_point_x, ending_point_y},
+                                                    method,
+                                                    get_weight_length);
 
     // Time and run code
-    auto t0 = std::chrono::high_resolution_clock::now();
-
-    std::optional<std::vector<node_id>> maybe_path;
-    if (algoritm == 0) {
-        maybe_path = shortest_path_dijkstra(graph, starting_point, ending_point, get_weight_length);
-    } else if (algoritm == 1) {
-        maybe_path = shortest_path_astar(graph, starting_point, ending_point, euclidean_heuristic, get_weight_length);
-    } else {
-        maybe_path = shortest_path_astar(graph, starting_point, ending_point, manhattan_heuristic, get_weight_length);
-    }
-
-    auto t1 = std::chrono::high_resolution_clock::now();
-
-    if (!maybe_path) {
-        return 2;
-    }
-
-    std::vector<node_id> path = *maybe_path;
-
-    auto time = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    if (!maybe_data)
+        return 1;
+    auto [eta, length, path] = *maybe_data;
 
     // Print shortest path
     if (algoritm == 0) {
@@ -93,29 +81,15 @@ int main() {
     } else {
         std::cout << "The shortest path using A star with manhattan heuristic is ";
     };
-
-    // Calculation distance
-    weight_t distance = 0;
-    for (size_t i = 0; i < path.size()-1; ++i) {
-        distance += graph.get_edge(path[i+1], path[i]).length;
-    };
-
-    std::cout << distance;
+    std::cout << length;
     std::cout << " meters (";
-    std::cout << time / 1000.0;
+    std::cout << (compute_time / 1000.0);
     std::cout << " seconds)" << std::endl;
 
     // Print path
-
     std::cout << "Coordinates of the shortest path:" << std::endl;
-    for (auto i = 0; i < path.size(); ++i) {
-        node_id id = path[i];
-        std::cout << "[";
-        std::cout << graph[id].latitude;
-        std::cout << ", ";
-        std::cout << graph[id].longitude;
-        std::cout << "]" << std::endl;
-    }
+    for (const auto& pt : path)
+        std::cout << "[" << pt.first << ", " << pt.second << "]" << std::endl;
 
     return 0;
 }

@@ -32,7 +32,7 @@ endif
 
 # Phonies
 .PHONY: all
-all: waze-server get-shortest-path
+all: waze-server get-shortest-path cli shortest benchmark
 
 .PHONY: serve
 serve:
