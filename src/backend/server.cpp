@@ -77,7 +77,7 @@ int main() {
                              weight_t eta = 0;
                              weight_t length = 0;
                              for (size_t i = 0; i < path.size()-1; ++i) {
-                                 const Edge& edge = graph.get_edge(path[i], path[i+1]);
+                                 const Edge& edge = graph.get_edge(path[i+1], path[i]);
                                  eta += edge.eta;
                                  length += edge.length;
                              }
