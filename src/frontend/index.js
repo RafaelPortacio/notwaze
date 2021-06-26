@@ -99,8 +99,10 @@ async function find_and_draw_path(starting_point, destination) {
             color: "pink",
             weight: 7,
             opacity: 0.5,
-        }).addTo(leaflet_map).bindPopup("ETA: " + humanizeDuration(1000 * Math.round(path["eta"])), {
-            autoPan: false,
+            }).addTo(leaflet_map).bindPopup("<p>ETA: " + humanizeDuration(1000 * Math.round(path["eta"])) + "<br>" +
+                                            "Length: " + path["length"] + " meters</p>" +
+                                            "<p>Time to compute: " + humanizeDuration(Math.round(path["compute-time"])) + "</p>", {
+                autoPan: false,
             closeButton: false,
         });
         polyline.on("mouseover", function(ev) {

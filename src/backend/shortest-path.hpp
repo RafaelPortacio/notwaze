@@ -63,7 +63,6 @@ std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph, c
         current = came_from.at(current);
         path.push_back(current);
     }
-    std::reverse(std::begin(path), std::end(path));
 
     return path;
 }
@@ -123,7 +122,6 @@ std::optional<std::vector<node_id>> shortest_path_astar(const Graph& graph, cons
         current = came_from.at(current);
         path.push_back(current);
     }
-    std::reverse(std::begin(path), std::end(path));
 
     return path;
 }
