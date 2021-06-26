@@ -13,9 +13,9 @@ using json = nlohmann::json;
 
 int main() {
     const Graph graph = load_graph_from_json_file("rj_graph_database.json");
-
+    
     std::cout << "Loaded the graph." << std::endl;
-
+    
     auto router = std::make_unique<restinio::router::express_router_t<>>();
     router->http_get("/sayHello",
                      [](const auto& req, const auto& params) {
@@ -28,18 +28,24 @@ int main() {
                      [&graph](const auto& req, const auto& params) {
                          const auto qp = restinio::parse_query(req->header().query());
 
-                         Node starting_point = Node {
-                             .latitude = std::stod((std::string)qp["startPointLat"]),
-                             .longitude = std::stod((std::string)qp["startPointLong"]),
-                         };
-                         Node ending_point = Node {
-                             .latitude = std::stod((std::string)qp["endPointLat"]),
-                             .longitude = std::stod((std::string)qp["endPointLong"]),
-                         };
+                         std::pair<double, double> starting_point = {std::stod((std::string)qp["startPointLat"]),
+                                                                     std::stod((std::string)qp["startPointLong"])};
+                         
+                         std::pair<double, double> ending_point = {std::stod((std::string)qp["endPointLat"]),
+                                                                   std::stod((std::string)qp["endPointLong"])};
+                         
                          std::string method = (std::string)qp["method"];
 
-                         node_id starting_point_id = graph.lookup_nodes(starting_point).second;
-                         node_id ending_point_id = graph.lookup_nodes(ending_point).first;
+                         
+                         std::tuple<node_id, node_id,
+                                    std::pair<int, Node>,
+                                    std::pair<int, Node>> start_end_info = graph.coords_to_ids(starting_point, ending_point);
+                         node_id starting_point_id = std::get<0>(start_end_info);
+                         node_id ending_point_id = std::get<1>(start_end_info);
+                         std::pair<int, Node> start_proj = std::get<2>(start_end_info);
+                         std::pair<int, Node> end_proj = std::get<3>(start_end_info);
+                         
+                         
 
                          std::function<weight_t(const Node&, const Node&)> heuristic;
 
@@ -56,14 +62,30 @@ int main() {
 
                          json out_json;
                          if (maybe_path) {
+                             
                              std::vector<node_id> path = *maybe_path;
-                             std::vector<json> path_latlongs(path.size());
-                             std::transform(std::rbegin(path), std::rend(path), std::begin(path_latlongs),
-                                            [&graph](node_id node_id) {
-                                                const Node& node = graph[node_id];
+                             std::vector<std::pair<double, double>> coord_path = {};
+                             
+                             
+                             for(auto it = path.begin(); it != path.end(); it++) {
+                                coord_path.push_back({graph.get_node(*it).latitude, graph.get_node(*it).longitude});
+                             }
+                             if(end_proj.first == 2){
+                                coord_path.push_back({(end_proj.second).latitude,
+                                                      (end_proj.second).longitude});
+                             }
+                             if(start_proj.first == 2){
+                                coord_path.insert(coord_path.begin(),
+                                                  {(start_proj.second).latitude,
+                                                   (start_proj.second).longitude});
+                             }
+
+                             std::vector<json> path_latlongs(coord_path.size());
+                             std::transform(std::rbegin(coord_path), std::rend(coord_path), std::begin(path_latlongs),
+                                            [](const std::pair<double, double>& latlong) {
                                                 return json {
-                                                    {"latitude", node.latitude},
-                                                    {"longitude", node.longitude}
+                                                    {"latitude", latlong.first},
+                                                    {"longitude", latlong.second}
                                                 };
                                             });
                              weight_t eta = 0;
