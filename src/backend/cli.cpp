@@ -2,6 +2,7 @@
 #include <functional>
 #include <math.h>
 #include <time.h>
+#include <chrono>
 
 #include "graph.hpp"
 #include "io.hpp"
@@ -53,14 +54,12 @@ int main() {
     // Shortest path
     double start_time;
     double end_time;
-    double time;
 
     auto [starting_point, ending_point, _, __] = graph.coords_to_ids({starting_point_x, starting_point_y}, 
                                                                      {ending_point_x, ending_point_y});
 
-
     // Time and run code 
-    start_time = clock();
+    auto t0 = std::chrono::high_resolution_clock::now();
 
     std::optional<std::vector<node_id>> maybe_path;
     if (algoritm == 0) {
@@ -71,7 +70,7 @@ int main() {
         maybe_path = shortest_path_astar(graph, starting_point, ending_point, manhattan_heuristic, get_weight_length);
     }
 
-    end_time = clock();
+    auto t1 = std::chrono::high_resolution_clock::now();
 
     if (!maybe_path) {
         return 2;
@@ -79,7 +78,7 @@ int main() {
 
     std::vector<node_id> path = *maybe_path;
 
-    time = (end_time - start_time) * 1000.0 / CLOCKS_PER_SEC;
+    auto time = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
 
     // Print shortest path
     if (algoritm == 0) {
@@ -97,7 +96,7 @@ int main() {
 
     std::cout << distance;
     std::cout << " meters (";
-    std::cout << time;
+    std::cout << time / 1000.0;
     std::cout << " seconds)" << std::endl;
 
     // Print path
