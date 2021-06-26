@@ -51,8 +51,17 @@ int main() {
     double ending_point_y = std::stod(ending_point_str_y);
 
     // Take node id
-    auto [starting_point, ending_point, _, __] = graph.coords_to_ids({starting_point_x, starting_point_y},
-                                                                     {ending_point_x, ending_point_y});
+    auto [start_edge, end_edge, _, _, _, _, __] = graph.coords_to_ids({starting_point_x, starting_point_y},
+		                                                              {ending_point_x, ending_point_y});
+	
+	node_id starting_point_id = start_edge.second;
+    node_id ending_point_id = end_edge.first;
+
+    if(start_proj.first == 0)
+        starting_point_id = start_edge.first;
+
+    if(end_proj.first == 1)
+        ending_point_id = end_edge.second;
 
     // Time and run code
     auto t0 = std::chrono::high_resolution_clock::now();
