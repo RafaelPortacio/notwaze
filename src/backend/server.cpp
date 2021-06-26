@@ -63,14 +63,18 @@ int main() {
                                                 };
                                             });
                              weight_t eta = 0;
+                             weight_t length = 0;
                              for (size_t i = 0; i < path.size()-1; ++i) {
-                                 eta += graph.get_edge(path[i], path[i+1]).eta;
+                                 const Edge& edge = graph.get_edge(path[i], path[i+1]);
+                                 eta += edge.eta;
+                                 length += edge.length;
                              }
 
                              json&& json {
                                  {"shortest-paths", json::array({
                                      json::object({
                                          {"eta", eta},
+                                         {"length", length},
                                          {"compute-time", std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count()},
                                          {"path", path_latlongs},
                                      })
