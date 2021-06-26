@@ -33,7 +33,7 @@ struct Node {
     friend double distance_to_segment(const Node& s1,
                                       const Node& s2,
                                       const Node& p) {
-        
+
 
         auto pair_dot_prod = [](std::pair<double, double> vec1,
                              std::pair<double, double> vec2) {
@@ -49,15 +49,15 @@ struct Node {
         std::pair<double, double> vec_s1_to_p;
         vec_s1_to_p.first = p.latitude - s1.latitude;
         vec_s1_to_p.second = p.longitude - s1.longitude;
-        
+
         std::pair<double, double> vec_s2_to_p;
         vec_s2_to_p.first = p.latitude - s2.latitude;
         vec_s2_to_p.second = p.longitude - s2.longitude;
-        
+
         std::pair<double, double> vec_s1_to_s2;
         vec_s1_to_s2.first = s2.latitude - s1.latitude;
         vec_s1_to_s2.second = s2.longitude - s1.longitude;
-        
+
         if (pair_dot_prod(vec_s1_to_p, vec_s1_to_s2) < 0){
             return euclidean_distance(s1, p);
         }else if(-pair_dot_prod(vec_s2_to_p, vec_s1_to_s2) < 0){
@@ -67,11 +67,11 @@ struct Node {
                    euclidean_distance(s1, s2);
         }
     }
-	
+
     friend std::pair<int, Node> projection(const Node& s1,
                                                 const Node& s2,
                                                 const Node& p) {
-        
+
 
         auto pair_dot_prod = [](std::pair<double, double> vec1,
                              std::pair<double, double> vec2) {
@@ -81,15 +81,15 @@ struct Node {
         std::pair<double, double> vec_s1_to_p;
         vec_s1_to_p.first = p.latitude - s1.latitude;
         vec_s1_to_p.second = p.longitude - s1.longitude;
-        
+
         std::pair<double, double> vec_s2_to_p;
         vec_s2_to_p.first = p.latitude - s2.latitude;
         vec_s2_to_p.second = p.longitude - s2.longitude;
-        
+
         std::pair<double, double> vec_s1_to_s2;
         vec_s1_to_s2.first = s2.latitude - s1.latitude;
         vec_s1_to_s2.second = s2.longitude - s1.longitude;
-        
+
         if (pair_dot_prod(vec_s1_to_p, vec_s1_to_s2) < 0){
             return {0, Node {.latitude = s1.latitude,
                                 .longitude = s1.longitude}};
@@ -168,14 +168,14 @@ class Graph {
                                     return x.first == destination_node;
                                 })->second;
         }
-		
+
 		const Node& get_node(node_id the_node_id) const {
 			return _nodes.at(the_node_id);
 		}
 
         std::pair<node_id, node_id> lookup_nodes(const Node& query_node) const {
             // TODO: we'll probably want to use a k-D tree here
-			
+
 			double min_dist_to_segment = INFINITY;
 			node_id min_origin;
 			node_id min_receiver;
@@ -194,35 +194,35 @@ class Graph {
 					}
 				}
 			}
-			
+
 			return std::pair(min_origin, min_receiver);
 		}
-    
+
         std::tuple<node_id, node_id, std::pair<int, Node>, std::pair<int, Node>> coords_to_ids(const std::pair<double, double>& start_coords,
                                                                                                const std::pair<double, double>& end_coords) const {
             Node starting_point = Node {.latitude=start_coords.first, .longitude=start_coords.second};
             Node ending_point = Node {.latitude=end_coords.first, .longitude=end_coords.second};
             std::pair<node_id,node_id> start_edge = lookup_nodes(starting_point);
             std::pair<node_id,node_id> end_edge = lookup_nodes(ending_point);
-                                                 
+
             Node start_node_1 = get_node(start_edge.first);
             Node start_node_2 = get_node(start_edge.second);
             Node end_node_1 = get_node(end_edge.first);
             Node end_node_2 = get_node(end_edge.second);
-                         
+
             std::pair<int, Node> start_proj = projection(start_node_1, start_node_2, starting_point);
             std::pair<int, Node> end_proj = projection(end_node_1, end_node_2, ending_point);
-                         
+
             node_id starting_point_id = start_edge.second;
             node_id ending_point_id = end_edge.first;
-                                 
+
             if(start_proj.first == 0) {
                 starting_point_id = start_edge.first;
             }
-                         
+
             if(end_proj.first == 1) {
                 ending_point_id = end_edge.second;
             }
-            return {starting_point_id, ending_point_id, start_proj, end_proj};            
+            return {starting_point_id, ending_point_id, start_proj, end_proj};
         }
 };
