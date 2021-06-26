@@ -5,7 +5,6 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
-#include "dbg.h"
 
 using node_id = unsigned long int; // we could use size_t, but unsigned int seems to be
                            	       // enough for us, and using it will save us plenty of
@@ -228,12 +227,10 @@ class Graph {
 			
 			double start_proj_fraction = euclidean_distance(start_node_2, start_proj.second)/
                         euclidean_distance(start_node_1, start_node_2);
-            dbg(euclidean_distance(start_node_2, start_proj.second));
-			dbg(euclidean_distance(start_node_1, start_node_2));
+
             double end_proj_fraction = euclidean_distance(end_node_1, end_proj.second)/
                         euclidean_distance(end_node_1, end_node_2);
-			dbg(euclidean_distance(end_node_1, end_proj.second));
-			dbg(euclidean_distance(end_node_1, end_node_2));
+
             return {start_edge, end_edge, starting_point_id, ending_point_id, start_proj, end_proj, start_proj_fraction, end_proj_fraction};
         }
 };
