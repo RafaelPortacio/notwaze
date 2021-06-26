@@ -161,7 +161,7 @@ class Graph {
             return {min_origin, min_receiver};
         }
 
-        std::tuple<std::pair<node_id,node_id>, std::pair<node_id,node_id>, node_id, node_id,
+        std::tuple<std::pair<node_id,node_id>, std::pair<node_id,node_id>,
                    std::pair<int, Node>, std::pair<int, Node>, double, double>
                        coords_to_ids(const std::pair<double, double>& start_coords,
                                      const std::pair<double, double>& end_coords) const {
@@ -196,8 +196,6 @@ class Graph {
             return {
                 start_edge,
                 end_edge,
-                starting_point_id,
-                ending_point_id,
                 start_proj,
                 end_proj,
                 start_proj_fraction,

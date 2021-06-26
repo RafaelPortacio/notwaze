@@ -17,9 +17,48 @@ json get_path_json(const Graph& graph,
                    const std::pair<double, double>& starting_point, const std::pair<double, double>& ending_point,
                    ShortestPathMethod method,
                    GetWeight get_weight) {
-    auto [start_edge, end_edge, starting_point_id, ending_point_id, start_proj,
-          end_proj, start_proj_fraction, end_proj_fraction]
+    auto [start_edge, end_edge, start_proj, end_proj,
+          start_proj_fraction, end_proj_fraction]
         = graph.coords_to_ids(starting_point, ending_point);
+    
+    node_id starting_point_id = start_edge.second;
+    node_id ending_point_id = end_edge.first;
+
+    if(start_proj.first == 0)
+        starting_point_id = start_edge.first;
+
+    if(end_proj.first == 1)
+        ending_point_id = end_edge.second;
+    
+    /*
+    if(start_edge == end_edge && start_proj_fraction <= end_proj_fraction||
+      start_edge == {end_edge.second, end_edge.first}) {
+        
+        
+        caminho = conectar os nos start_proj.second e end_proj.second
+        const Edge& edge = graph.get_edge(start_edge.first, start_edge.second);
+        eta = edge.eta*std::abs(start_proj_fraction, end_proj_fraction);
+        length = edge.length*std::abs(start_proj_fraction, end_proj_fraction);
+        
+    }
+    
+    if(graph.get_edge(start_edge.second, start_edge.first).eta>0.00001) {
+        if(start_proj.first == 0){
+            node_id alt_starting_point_id = start_edge.second;
+        }else{
+            node_id alt_starting_point_id =start_edge.first;
+        }
+    }
+    
+    if(graph.get_edge(end_edge.second, end_edge.first).eta>0.00001) {
+        if(end_proj.first == 1){
+            node_id alt_ending_point_id = end_edge.first;
+        }else{
+            node_id alt_starting_point_id =start_edge.second;
+        }
+    }
+    */
+    
 
     std::optional<std::vector<node_id>> maybe_path;
     auto start_time = std::chrono::high_resolution_clock::now();
