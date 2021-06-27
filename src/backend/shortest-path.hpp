@@ -175,7 +175,7 @@ std::pair<unsigned long, std::optional<std::tuple<weight_t, weight_t, std::vecto
         ending_point_id = end_edge.second;
     
     std::pair<node_id,node_id>  end_edge_swap = {end_edge.second, end_edge.first};
-    if(start_edge == end_edge && 1 - start_proj_fraction <= end_proj_fraction||
+    if((start_edge == end_edge && 1 - start_proj_fraction <= end_proj_fraction)||
        start_edge == end_edge_swap) {
         
         

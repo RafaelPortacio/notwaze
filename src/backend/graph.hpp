@@ -178,14 +178,6 @@ class Graph {
             std::pair<int, Node> start_proj = projection(start_node_1, start_node_2, starting_point);
             std::pair<int, Node> end_proj = projection(end_node_1, end_node_2, ending_point);
 
-            node_id starting_point_id = start_edge.second;
-            node_id ending_point_id = end_edge.first;
-
-            if(start_proj.first == 0)
-                starting_point_id = start_edge.first;
-
-            if(end_proj.first == 1)
-                ending_point_id = end_edge.second;
 
             double start_proj_fraction
                 = euclidean_distance(start_node_2, start_proj.second) / euclidean_distance(start_node_1, start_node_2);
