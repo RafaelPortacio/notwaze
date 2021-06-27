@@ -43,13 +43,13 @@
 
 \title{Relatório -- Trabalho Final \\
        \large Estrutura de Dados e Algoritmos -- 2021 -- Prof. Jorge Poco}
-\author{Daniel Csillag \\ Rafael Portacio \\ Wellington José}
+\author{Daniel Csillag \\ Rafael Portácio \\ Wellington José}
 
 \begin{document}
 \maketitle
 
 \section{Introdução}
-Aqui gostaríamos de criar um Waze da cidade do Rio de Janeiro usando algoritmos diferentes de busca para encontrar o menor caminho entre dois pontos dados. 
+Criamos um mini-Waze para a cidade do Rio de Janeiro usando diferentes algoritmos de busca para encontrar o menor caminho entre dois pontos dados. 
 
 \section{Coleta e armazenamento dos dados}
 
@@ -65,12 +65,12 @@ A principal diferença do dijkstra para o A* é a adição da heurística que es
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.53]{EDA_full_inteface_web.png}
+    \includegraphics[scale=0.5]{EDA_full_inteface_web.png}
     \caption{Caption}
     \label{fig:my_label}
 \end{figure}
 
-No Frontend, colocamos algumas features, tais como:
+No Frontend, usamos a biblioteca Leaflet.js para fazer o mapa, colocamos algumas features, tais como:
 \begin{itemize}
     \item permitir a escolha do algoritmo a ser utilizado a partir de uma dropdown.
     
@@ -86,14 +86,14 @@ No Frontend, colocamos algumas features, tais como:
     
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.74]{EDA_path_with_shortest_path.png}
+    \includegraphics[scale=0.65]{EDA_path_with_shortest_path.png}
     \caption{Caminho com distancia}
     \label{fig:my_label}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.8]{EDA_path_with_fastest_path.png}
+    \includegraphics[scale=0.7]{EDA_path_with_fastest_path.png}
     \caption{Caminho com menor tempo}
     \label{fig:my_label}
 \end{figure}
@@ -113,7 +113,7 @@ No caso, para conectar o ponto de início a um nó, pode ser que precisemos faze
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.6]{EDAreport-fraction-edge.png}
+    \includegraphics[scale=0.43]{EDAreport-fraction-edge.png}
     \caption{Como podemos ver aqui temos pontos que não são vértices}
     \label{fig:my_label}
 \end{figure}
@@ -126,10 +126,12 @@ Na nossa implementação atual, temos um bug para ruas de mão dupla, por ele ac
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.59]{EDAreport-two-way-street-bug.png}
-    \caption{Caption}
+    \includegraphics[scale=0.5]{EDAreport-two-way-street-bug.png}
+    \caption{caso de ruas com mão dupla}
     \label{fig:my_label}
 \end{figure}
+
+\subsubsection{}
 
 \section{Conclusão}
 ...
