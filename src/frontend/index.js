@@ -67,10 +67,11 @@ async function find_and_draw_path(starting_point, destination) {
         var [end_point_latitude, end_point_longitude] = await geocode_latlong(destination);
     else
         var [end_point_latitude, end_point_longitude] = destination;
+    let goal = params.get("goal") ?? "shortest";
 
     var url = "http://localhost:8080/shortestPath?"
         + "method=" + encodeURI(params.get("method") ?? "astar-euclidean")
-        + "&goal=" + encodeURI(params.get("goal"))
+        + "&goal=" + encodeURI(goal)
         + "&startPointLat=" + encodeURI(start_point_latitude)
         + "&startPointLong=" + encodeURI(start_point_longitude)
         + "&endPointLat=" + encodeURI(end_point_latitude)
@@ -87,7 +88,6 @@ async function find_and_draw_path(starting_point, destination) {
 
     var starting_point = data["path"][0];
     var ending_point =   data["path"][data["path"].length-1];
-    let goal = params.get("goal");
 
     // Add markers
     let marker_opts = {draggable: true, autoPan: true}
