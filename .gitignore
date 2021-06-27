@@ -17,6 +17,7 @@ graph_info.json
 # Our generated files
 rj_graph_database.json
 *.csv
+*.png
 
 # OSMNX Cache
 cache/
