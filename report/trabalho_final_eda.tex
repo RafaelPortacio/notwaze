@@ -53,7 +53,7 @@ Criamos um mini-Waze para a cidade do Rio de Janeiro usando diferentes algoritmo
 
 \section{Coleta e armazenamento dos dados}
 
-Assim como foi especificado na proposta do projeto, extraímos os dados usando a biblioteca OSMnx. Com eles criamos um arquivo \textsc{.json} com as informações dos nós (id, latitude e longitude) e das arestas (nó de saída, nó de chegada, comprimento e tempo estimado de chegada [ETA]). Fazemos uma leitura desse \textsc{.json} em código \textsc{c++} criar o objeto grafo, que contém objetos arestas e nós. Organizamos os nós num \textsc{hash map}. Para as arestas, fizemos uma lista de adjacências (adjacency list) já que temos um grafo bem esparso (pois os graus dos nós são pequenos em relação à quantidade de nós total). Dessa forma, teríamos que uma matriz de adjacências seria desnecessariamente grande pois teria dimensões extremamente altas e a grande maioria dos elementos dela seriam iguais a zero.
+Assim como foi especificado na proposta do projeto, extraímos os dados usando a biblioteca OSMnx. Com eles criamos um arquivo \textsc{.json} (de tamanho 56M) com as informações dos nós (id, latitude e longitude) e das arestas (nó de saída, nó de chegada, comprimento e tempo estimado de chegada [ETA]). Fazemos uma leitura desse \textsc{.json} precisamos tirar os espaços do \textbf{json} para poder trabalhar com ele usando o \textbf{sed} para em código \textsc{c++} criar o objeto grafo, que contém objetos arestas e nós. Organizamos os nós num \textsc{hash map}. Para as arestas, fizemos uma lista de adjacências (adjacency list) já que temos um grafo bem esparso (pois os graus dos nós são pequenos em relação à quantidade de nós total). Dessa forma, teríamos que uma matriz de adjacências seria desnecessariamente grande pois teria dimensões extremamente altas e a grande maioria dos elementos dela seriam iguais a zero.
 
 \section{Backend}
 
@@ -61,12 +61,19 @@ Aqui usamos os algoritmos Dijsktra, A* com heurística euclidiana e A* com heur�
 
 A principal diferença do dijkstra para o A* é a adição da heurística que está implementada como uma função que é passada como argumento para o algoritmo e cuja a utilidade é dar prioridade para os nós que se aproximam do destino final, chegando assim no destino final com menos passos.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.72]{EDA_benchmark_violinplot.png}
+    \caption{Comparação dos tempos de execução dos algoritmos}
+    \label{fig:my_label}
+\end{figure}
+
 \section{Frontend}
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{EDA_full_inteface_web.png}
-    \caption{Caption}
+    \caption{Interface web toda}
     \label{fig:my_label}
 \end{figure}
 
@@ -113,8 +120,17 @@ No caso, para conectar o ponto de início a um nó, pode ser que precisemos faze
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.43]{EDAreport-fraction-edge.png}
+    \includegraphics[scale=0.43]{EDA_fraction_edge.png}
     \caption{Como podemos ver aqui temos pontos que não são vértices}
+    \label{fig:my_label}
+\end{figure}
+
+Sendo também possível fazer uma fração de aresta no meio de uma rua para poder criar um caminho que está dentro de uma mesma aresta. (Conforme abaixo)
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{EDA_same_street_special_case.png}
+    \caption{Aqui temos um trajeto que é fração intermediária de uma única aresta.}
     \label{fig:my_label}
 \end{figure}
 
@@ -126,12 +142,10 @@ Na nossa implementação atual, temos um bug para ruas de mão dupla, por ele ac
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5]{EDAreport-two-way-street-bug.png}
-    \caption{caso de ruas com mão dupla}
+    \includegraphics[scale=0.5]{EDA_two_way_street_bug.png}
+    \caption{caso de rua com mão dupla, nó de baixo com caminho errado}
     \label{fig:my_label}
 \end{figure}
-
-\subsubsection{}
 
 \section{Conclusão}
 ...
