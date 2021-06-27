@@ -17,7 +17,7 @@ int main() {
     std::string ending_point_str_x;
     std::string ending_point_str_y;
 
-    std::cout << "... Loading index";
+    std::cout << "... Loading index" << std::flush;
 
     // Load graph
     const Graph graph = load_graph_from_json_file("rj_graph_database.json");
