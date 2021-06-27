@@ -16,6 +16,8 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
+\usepackage{float}
+
 % Useful commands
 % % Math
 \newcommand{\R}{\mathbb{R}}
@@ -61,14 +63,41 @@ A principal diferença do dijkstra para o A* é a adição da heurística que es
 
 \section{Frontend}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.53]{EDA_full_inteface_web.png}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
 No Frontend, colocamos algumas features, tais como:
 \begin{itemize}
     \item permitir a escolha do algoritmo a ser utilizado a partir de uma dropdown.
+    
     \item poder selecionar os pontos de início e fim a partir da função de geocoding do nominatim, assim permitindo escrever endereços para obter os pontos.
+    
     \item poder mudar os pontos de início e fim ao arrastar seus respectivos markers pelo mapa.
+    
     \item armazenar na url as coordenadas de início e fim, assim como o algoritmo utilizado, para assim poder obter o mesmo trajeto ao copiar a url para outra aba.
+    
     \item exibir o comprimento, o tempo estimado de chegada e o tempo de execução do algoritmo utilizado ao posicionar o mouse sobre um dado caminho.
-    \item podemos calcular não só o menor caminho como também o mais rápido a partir de uma dropdown.
+    
+    \item podemos calcular não só o menor caminho como também o mais rápido a partir de uma dropdown. Logo abaixo temos os 2 casos:
+    
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.74]{EDA_path_with_shortest_path.png}
+    \caption{Caminho com distancia}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{EDA_path_with_fastest_path.png}
+    \caption{Caminho com menor tempo}
+    \label{fig:my_label}
+\end{figure}
+
 \end{itemize}
 
 \section{Problemas encontrados}
@@ -80,14 +109,27 @@ No início, nossa implementação encontrava o nó mais próximo dos pontos de i
 Visando resolver isso, nós implementamos uma busca pela aresta mais próxima e projetamos o ponto nela, e com essa aresta podemos fazer a conexão do ponto de início a um nó que é adequado para ele se conectar.
 
 \subsubsection{Tomando frações de arestas}
-No caso, para conectar o ponto de início a um nó, pode ser que precisemos fazer um trajeto equivalente a uma fração de uma aresta, e dessa forma adicionamos isso no trajeto, usando para isso um peso(weight) igual à porcentagem de fração tomada vezes o peso total da aresta, sendo assim o peso proporcional à fração.
+No caso, para conectar o ponto de início a um nó, pode ser que precisemos fazer um trajeto equivalente a uma fração de uma aresta, e dessa forma adicionamos isso no trajeto, usando para isso um peso(weight) igual à porcentagem de fração tomada vezes o peso total da aresta, sendo assim o peso proporcional à fração. Permitindo assim posicionar pontos no meio das ruas e não somente nos nós. (Conforme imagem abaixo)
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{EDAreport-fraction-edge.png}
+    \caption{Como podemos ver aqui temos pontos que não são vértices}
+    \label{fig:my_label}
+\end{figure}
 
 \subsection{Ruas com mão dupla}
 Quando por exemplo o início está no meio de uma rua de mão dupla, existem duas opções para o nó de início do trajeto e por isso faz-se necessário chamar o algoritmo mais de uma vez caso deseje-se usar o grafo original. Sendo em alguns casos, necessário chamar o algoritmo 4 vezes, caso ambos o início e fim estejam no meio de ruas de mão.\\
-\textbf{OBS:} Uma possibilidade para evitar que o algoritmo seja chamado mais de uma vez, seria usar um grafo alterado G' em que temos os nós do pontos de início e fim adicionados no grafo e fazemos as mudanças necessárias.
+\textbf{OBS:} Uma possibilidade para evitar que o algoritmo seja chamado mais de uma vez, seria usar um grafo alterado G' em que temos os nós do pontos de início e fim adicionados no grafo e fazemos as mudanças necessárias.\\
 
-\subsection{...}
-...
+Na nossa implementação atual, temos um bug para ruas de mão dupla, por ele acabar percorrendo até o ponto final depois de passar pela mesma rua onde ele está. (Conforme imagem abaixo)
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.59]{EDAreport-two-way-street-bug.png}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
 
 \section{Conclusão}
 ...
