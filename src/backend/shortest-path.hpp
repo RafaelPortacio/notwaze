@@ -173,33 +173,20 @@ std::pair<unsigned long, std::optional<std::tuple<weight_t, weight_t, std::vecto
 
     if(end_proj.first == 1)
         ending_point_id = end_edge.second;
-
-    /*
-    if(start_edge == end_edge && start_proj_fraction <= end_proj_fraction||
-      start_edge == {end_edge.second, end_edge.first}) {
-        caminho = conectar os nos start_proj.second e end_proj.second
-        const Edge& edge = graph.get_edge(start_edge.first, start_edge.second);
-        eta = edge.eta*std::abs(start_proj_fraction, end_proj_fraction);
-        length = edge.length*std::abs(start_proj_fraction, end_proj_fraction);
+    
+    std::pair<node_id,node_id>  end_edge_swap = {end_edge.second, end_edge.first};
+    if(start_edge == end_edge && 1 - start_proj_fraction <= end_proj_fraction||
+       start_edge == end_edge_swap) {
         
+        
+        std::vector<std::pair<double,double>> coord_path {{start_proj.second.latitude, start_proj.second.longitude},
+                                                    {end_proj.second.latitude, end_proj.second.longitude}};
+        const Edge& edge = graph.get_edge(start_edge.first, start_edge.second);
+        weight_t eta = edge.eta*std::abs(start_proj_fraction - end_proj_fraction);
+        weight_t length = edge.length*std::abs(start_proj_fraction - end_proj_fraction);
+        return {0, {{eta, length, coord_path}}};
     }
 
-    if(graph.get_edge(start_edge.second, start_edge.first).eta>0.00001) {
-        if(start_proj.first == 0){
-            node_id alt_starting_point_id = start_edge.second;
-        }else{
-            node_id alt_starting_point_id =start_edge.first;
-        }
-    }
-
-    if(graph.get_edge(end_edge.second, end_edge.first).eta>0.00001) {
-        if(end_proj.first == 1){
-            node_id alt_ending_point_id = end_edge.first;
-        }else{
-            node_id alt_starting_point_id =start_edge.second;
-        }
-    }
-    */
 
     std::optional<std::vector<node_id>> maybe_path;
     auto start_time = std::chrono::high_resolution_clock::now();
