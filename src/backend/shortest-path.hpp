@@ -179,11 +179,11 @@ std::pair<unsigned long, std::optional<std::tuple<weight_t, weight_t, std::vecto
        start_edge == end_edge_swap) {
         
         
-        std::vector<std::pair<double,double>> coord_path {{start_proj.second.latitude, start_proj.second.longitude},
-                                                    {end_proj.second.latitude, end_proj.second.longitude}};
+        std::vector<std::pair<double,double>> coord_path {{end_proj.second.latitude, end_proj.second.longitude},
+                                                          {start_proj.second.latitude, start_proj.second.longitude}};
         const Edge& edge = graph.get_edge(start_edge.first, start_edge.second);
-        weight_t eta = edge.eta*std::abs(start_proj_fraction - end_proj_fraction);
-        weight_t length = edge.length*std::abs(start_proj_fraction - end_proj_fraction);
+        weight_t eta = edge.eta*std::abs(1 - start_proj_fraction - end_proj_fraction);
+        weight_t length = edge.length*std::abs(1 - start_proj_fraction - end_proj_fraction);
         return {0, {{eta, length, coord_path}}};
     }
 
