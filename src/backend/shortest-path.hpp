@@ -27,6 +27,11 @@ enum class ShortestPathMethod {
     AStarManhattan,
 };
 
+enum class ShortestOrFastest {
+    get_weight_eta,
+    get_weight_length,
+};
+
 // Dijkstra
 template <typename GetWeight>
 std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph,
@@ -59,7 +64,7 @@ std::optional<std::vector<node_id>> shortest_path_dijkstra(const Graph& graph,
 
             if (!cost_so_far.count(iter->first) || new_cost < cost_so_far.at(iter->first)) {
                 cost_so_far[iter->first] = new_cost;
-                weight_t priority = new_cost;  // heuristic equals zero
+                weight_t priority = new_cost;  // there is no heuristic
                 frontier.push({iter->first, priority});
                 came_from[iter->first] = current.first;
             }
@@ -154,13 +159,12 @@ inline weight_t get_weight_length(const Edge& edge) {
 }
 
 
-template <typename GetWeight>
 std::pair<unsigned long, std::optional<std::tuple<weight_t, weight_t, std::vector<std::pair<double, double>>>>>
     get_path_data(const Graph& graph,
                   const std::pair<double, double>& starting_point,
                   const std::pair<double, double>& ending_point,
                   ShortestPathMethod method,
-                  GetWeight get_weight) {
+                  ShortestOrFastest short_or_fast) {
     auto [start_edge, end_edge, start_proj, end_proj,
           start_proj_fraction, end_proj_fraction]
         = graph.coords_to_ids(starting_point, ending_point);
@@ -192,13 +196,22 @@ std::pair<unsigned long, std::optional<std::tuple<weight_t, weight_t, std::vecto
     auto start_time = std::chrono::high_resolution_clock::now();
     switch (method) {
         case ShortestPathMethod::Dijkstra:
-            maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id, get_weight);
+            if (short_or_fast == ShortestOrFastest::get_weight_eta)
+                maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id, get_weight_eta);
+            else
+                maybe_path = shortest_path_dijkstra(graph, starting_point_id, ending_point_id, get_weight_length);
             break;
         case ShortestPathMethod::AStarEuclidean:
-            maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, euclidean_heuristic, get_weight);
+            if (short_or_fast == ShortestOrFastest::get_weight_eta)
+                maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, euclidean_heuristic, get_weight_eta);
+            else
+                maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, euclidean_heuristic, get_weight_length);
             break;
         case ShortestPathMethod::AStarManhattan:
-            maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, manhattan_heuristic, get_weight);
+            if (short_or_fast == ShortestOrFastest::get_weight_eta)
+                maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, manhattan_heuristic, get_weight_eta);
+            else
+                maybe_path = shortest_path_astar(graph, starting_point_id, ending_point_id, manhattan_heuristic, get_weight_length);
             break;
     }
     auto end_time = std::chrono::high_resolution_clock::now();

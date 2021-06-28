@@ -12,6 +12,7 @@
 int main() {
     // Initialization variables
     int algoritm = -1;
+    int shortest_or_fastest = -1;
     std::string starting_point_str_x;
     std::string starting_point_str_y;
     std::string ending_point_str_x;
@@ -30,6 +31,12 @@ int main() {
                   << "[1] A* with euclidean heuristic" << std::endl
                   << "[2] A* with manhattan heuristic" << std::endl;
         std::cin >> algoritm;
+    }
+
+    while (shortest_or_fastest != 0 && shortest_or_fastest != 1) {
+        std::cout << "[0] Shortest path" << std::endl
+                  << "[1] Fastest path" << std::endl;
+        std::cin >> shortest_or_fastest;
     }
 
     // Starting point and ending point
@@ -60,13 +67,20 @@ int main() {
         method = ShortestPathMethod::AStarManhattan;
     else
         throw std::runtime_error("bad shortest path method");
+    
+    ShortestOrFastest short_or_fast;
+    if (shortest_or_fastest == 0)
+        short_or_fast = ShortestOrFastest::get_weight_length;
+    else
+        short_or_fast = ShortestOrFastest::get_weight_eta;
 
     // Get shortest path
+    
     auto [compute_time, maybe_data] = get_path_data(graph,
                                                     {starting_point_x, starting_point_y},
                                                     {ending_point_x, ending_point_y},
                                                     method,
-                                                    get_weight_length);
+                                                    short_or_fast);
 
     // Time and run code
     if (!maybe_data)
