@@ -3,7 +3,7 @@ serve: src/backend/waze-server
 	$(MAKE) serve-backend & $(MAKE) serve-frontend
 
 .PHONY: cli
-cli: src/backend/cli
+cli: src/backend/cli rj_graph_database.json
 	./$<
 
 .PHONY: serve-backend
