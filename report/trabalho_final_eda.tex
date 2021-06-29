@@ -41,7 +41,7 @@
 \newcommand{\note}[1]{{\color{red}{\bf Note:} #1}}
 \newcommand{\todo}[1]{{\color{blue}{\bf TO DO:} #1}}
 
-\title{Relatório -- Trabalho Final \\
+\title{Relatório -- Trabalho Final "Not Waze"\\
        \large Estrutura de Dados e Algoritmos -- 2021 -- Prof. Jorge Poco}
 \author{Daniel Csillag \\ Rafael Portácio \\ Wellington José}
 
@@ -59,13 +59,13 @@ Assim como foi especificado na proposta do projeto, extraímos os dados usando a
 
 Aqui usamos os algoritmos Dijsktra, A* com heurística euclidiana e A* com heurística manhattan. Usando uma \textsc{min heap} que implementamos para gerenciar os custos dos caminhos. \\
 
-A principal diferença do dijkstra para o A* é a adição da heurística que está implementada como uma função que é passada como argumento para o algoritmo e cuja a utilidade é dar prioridade para os nós que se aproximam do destino final, chegando assim no destino final com menos passos.
+A principal diferença do dijkstra para o A* é a adição da heurística que está implementada como uma função que é passada como argumento para o algoritmo, sua a utilidade é dar prioridade para os nós próximos do destino final, levando assim menos passos. Conforme os gráficos abaixo, o Dijsktra ainda conseguiu ser mais consistente na velocidade por não se preocupar com o cálculo da heurística.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.72]{EDA_benchmark_violinplot.png}
+    \includegraphics[scale=0.63]{EDA_benchmark_violinplot.png}
     \caption{Comparação dos tempos de execução dos algoritmos}
-    \label{fig:my_label}
+    \label{fig1}
 \end{figure}
 
 \section{Frontend}
@@ -74,7 +74,7 @@ A principal diferença do dijkstra para o A* é a adição da heurística que es
     \centering
     \includegraphics[scale=0.5]{EDA_full_inteface_web.png}
     \caption{Interface web toda}
-    \label{fig:my_label}
+    \label{fig2}
 \end{figure}
 
 No Frontend, usamos a biblioteca Leaflet.js para fazer o mapa, colocamos algumas features, tais como:
@@ -95,14 +95,14 @@ No Frontend, usamos a biblioteca Leaflet.js para fazer o mapa, colocamos algumas
     \centering
     \includegraphics[scale=0.65]{EDA_path_with_shortest_path.png}
     \caption{Caminho com distancia}
-    \label{fig:my_label}
+    \label{fig3}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.7]{EDA_path_with_fastest_path.png}
-    \caption{Caminho com menor tempo}
-    \label{fig:my_label}
+    \caption{Caminho mais rápido}
+    \label{fig4}
 \end{figure}
 
 \end{itemize}
@@ -116,13 +116,13 @@ No início, nossa implementação encontrava o nó mais próximo dos pontos de i
 Visando resolver isso, nós implementamos uma busca pela aresta mais próxima e projetamos o ponto nela, e com essa aresta podemos fazer a conexão do ponto de início a um nó que é adequado para ele se conectar.
 
 \subsubsection{Tomando frações de arestas}
-No caso, para conectar o ponto de início a um nó, pode ser que precisemos fazer um trajeto equivalente a uma fração de uma aresta, e dessa forma adicionamos isso no trajeto, usando para isso um peso(weight) igual à porcentagem de fração tomada vezes o peso total da aresta, sendo assim o peso proporcional à fração. Permitindo assim posicionar pontos no meio das ruas e não somente nos nós. (Conforme imagem abaixo)
+No caso, para conectar o ponto de início a um nó, pode ser que precisemos fazer um trajeto equivalente a uma fração de uma aresta, e dessa forma adicionamos isso no trajeto, usando para isso um peso (weight) igual à porcentagem de fração tomada vezes o peso total da aresta, sendo assim o peso proporcional à fração. Permitindo assim posicionar pontos no meio das ruas e não somente nos nós. (Conforme imagem abaixo)
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.43]{EDA_fraction_edge.png}
     \caption{Como podemos ver aqui temos pontos que não são vértices}
-    \label{fig:my_label}
+    \label{fig5}
 \end{figure}
 
 Sendo também possível fazer uma fração de aresta no meio de uma rua para poder criar um caminho que está dentro de uma mesma aresta. (Conforme abaixo)
@@ -131,7 +131,7 @@ Sendo também possível fazer uma fração de aresta no meio de uma rua para pod
     \centering
     \includegraphics[scale=0.7]{EDA_same_street_special_case.png}
     \caption{Aqui temos um trajeto que é fração intermediária de uma única aresta.}
-    \label{fig:my_label}
+    \label{fig6}
 \end{figure}
 
 \subsection{Ruas com mão dupla}
@@ -144,10 +144,7 @@ Na nossa implementação atual, temos um bug para ruas de mão dupla, por ele ac
     \centering
     \includegraphics[scale=0.5]{EDA_two_way_street_bug.png}
     \caption{caso de rua com mão dupla, nó de baixo com caminho errado}
-    \label{fig:my_label}
+    \label{fig7}
 \end{figure}
-
-\section{Conclusão}
-...
 
 \end{document}
