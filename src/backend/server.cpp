@@ -68,10 +68,10 @@ int main() {
                          std::string json_str;
                          if (goal_str == "shortest")
                              json_str
-                                 = get_path_json(graph, starting_point, ending_point, method, get_weight_length).dump();
+                                 = get_path_json(graph, starting_point, ending_point, method, ShortestOrFastest::get_weight_length).dump();
                          else if (goal_str == "fastest")
                              json_str
-                                 = get_path_json(graph, starting_point, ending_point, method, get_weight_eta).dump();
+                                 = get_path_json(graph, starting_point, ending_point, method, ShortestOrFastest::get_weight_eta).dump();
                          else
                              throw std::runtime_error("bad goal");
 
