@@ -44,6 +44,8 @@ Our code is split into three components:
 
 ## How to run
 
+### Web Frontend
+
 Note that in order for the servers to run, we need both the `8000` and `8080` ports to be free.
 
 Run:
@@ -55,3 +57,11 @@ make
 This will, if necessary, generate the street graph, and then serve the backend and the frontend.
 
 Once that's done, go with your browser to [localhost:8000/](http://localhost:8000/).
+
+### Command Line Interface
+
+Just run
+
+```sh
+make cli
+```
