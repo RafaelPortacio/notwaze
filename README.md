@@ -65,3 +65,9 @@ Just run
 ```sh
 make cli
 ```
+
+### Contributors
+
+- Daniel Csillag ([@dccsillag](https://github.com/dccsillag))
+- Rafael Portacio ([@RafaelPortacio](https://github.com/RafaelPortacio))
+- Wellington Silva ([@wellington36](https://github.com/wellington36))
